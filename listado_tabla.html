@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Lights - Vista Tabla</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="topnav">
+        <a href="index.html" class="logo">Cinema <span>Lights</span></a>
+        <div class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="listado_tabla.html" class="active">Vista Tabla</a>
+            <a href="listado_box.html">Vista Tarjetas</a>
+            <a href="comprar.html">Comprar</a>
+            <a href="login.html" class="btn-login">Login</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="card">
+            <h1>Cartelera (Vista Tabular)</h1>
+            <p class="subtitle">
+                Listado formal de todas las películas en cartelera.
+            </p>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Película</th>
+                            <th>Clasificación</th>
+                            <th>Género</th>
+                            <th>Precio desde</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="codigo">#001</td>
+                            <td>Spider-Man: Brand New Day</td>
+                            <td>+13</td>
+                            <td>Acción / Fantasía</td>
+                            <td>$4.500</td>
+                            <td><a href="producto.html?peli=spiderman" class="link-detalle">Ver ficha</a></td>
+                        </tr>
+                        <tr>
+                            <td class="codigo">#002</td>
+                            <td>Obsession</td>
+                            <td>+18</td>
+                            <td>Thriller</td>
+                            <td>$4.200</td>
+                            <td><a href="producto.html?peli=obsession" class="link-detalle">Ver ficha</a></td>
+                        </tr>
+                        <tr>
+                            <td class="codigo">#003</td>
+                            <td>Wicked</td>
+                            <td>+10</td>
+                            <td>Musical / Fantasía</td>
+                            <td>$4.800</td>
+                            <td><a href="producto.html?peli=wicked" class="link-detalle">Ver ficha</a></td>
+                        </tr>
+                        <tr>
+                            <td class="codigo">#004</td>
+                            <td>Crepúsculo</td>
+                            <td>+13</td>
+                            <td>Romance / Fantasía</td>
+                            <td>$5.000</td>
+                            <td><a href="producto.html?peli=crepusculo" class="link-detalle">Ver ficha</a></td>
+                        </tr>
+                        <tr>
+                            <td class="codigo">#005</td>
+                            <td>Chainsaw Man: Reze Arc</td>
+                            <td>+16</td>
+                            <td>Anime / Acción</td>
+                            <td>$3.900</td>
+                            <td><a href="producto.html?peli=chainsawman" class="link-detalle">Ver ficha</a></td>
+                        </tr>
+                        <tr>
+                            <td class="codigo">#006</td>
+                            <td>Spider-Man: Across the Spider-Verse</td>
+                            <td>+10</td>
+                            <td>Animación / Acción</td>
+                            <td>$4.600</td>
+                            <td><a href="producto.html?peli=spiderverse" class="link-detalle">Ver ficha</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
+    </footer>
+</body>
+</html>

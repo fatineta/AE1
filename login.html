@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Lights - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="topnav">
+        <a href="index.html" class="logo">Cinema <span>Lights</span></a>
+        <div class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="listado_tabla.html">Vista Tabla</a>
+            <a href="listado_box.html">Vista Tarjetas</a>
+            <a href="comprar.html">Comprar</a>
+            <a href="login.html" class="btn-login active">Login</a>
+        </div>
+    </nav>
+
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div id="login-form">
+                <h1>Iniciar sesión</h1>
+                <p class="subtitle">Ingresá con tu cuenta para comprar más rápido</p>
+
+                <form onsubmit="event.preventDefault(); alert('Sesión iniciada (simulación)'); window.location.href='index.html';">
+                    <div class="form-group">
+                        <label for="login-email">Correo electrónico</label>
+                        <input type="email" id="login-email" name="email" placeholder="tu@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" name="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Iniciar sesión</button>
+                </form>
+
+                <p class="login-toggle">
+                    ¿No tenés cuenta? <a href="#" onclick="toggleForms()">Registrate</a>
+                </p>
+            </div>
+
+            <div id="register-form" style="display:none;">
+                <h1>Crear cuenta</h1>
+                <p class="subtitle">Registrate para acceder a la cartelera y comprar entradas</p>
+
+                <form onsubmit="event.preventDefault(); alert('Cuenta creada (simulación)'); window.location.href='index.html';">
+                    <div class="form-group">
+                        <label for="reg-nombre">Nombre completo</label>
+                        <input type="text" id="reg-nombre" name="nombre" placeholder="Juan Pérez" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email">Correo electrónico</label>
+                        <input type="email" id="reg-email" name="email" placeholder="tu@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Contraseña</label>
+                        <input type="password" id="reg-password" name="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Registrarme</button>
+                </form>
+
+                <p class="login-toggle">
+                    ¿Ya tenés cuenta? <a href="#" onclick="toggleForms()">Iniciá sesión</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
+    </footer>
+
+    <script>
+        function toggleForms() {
+            const login = document.getElementById('login-form');
+            const register = document.getElementById('register-form');
+            if (login.style.display === 'none') {
+                login.style.display = 'block';
+                register.style.display = 'none';
+            } else {
+                login.style.display = 'none';
+                register.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

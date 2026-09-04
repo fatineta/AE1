@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Lights - Comprar</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="topnav">
+        <a href="index.html" class="logo">Cinema <span>Lights</span></a>
+        <div class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="listado_tabla.html">Vista Tabla</a>
+            <a href="listado_box.html">Vista Tarjetas</a>
+            <a href="comprar.html" class="active">Comprar</a>
+            <a href="login.html" class="btn-login">Login</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="card" id="form-section">
+            <h1>Completar formulario de compra</h1>
+            <p class="subtitle">
+                Completá los datos requeridos para procesar tu orden. Este formulario interactúa de forma directa con el protocolo HTTP.
+            </p>
+
+            <div class="order-summary" id="resumen-funcion">
+                <h4>Tu selección</h4>
+                <p><strong>Película:</strong> Spider-Man: Brand New Day</p>
+                <p><strong>Función:</strong> <span id="hora-sel">18:30</span> · Sala <span id="sala-sel">2</span></p>
+            </div>
+
+            <form id="compra-form">
+                <div class="form-group">
+                    <label for="nombre">Nombre completo del cliente</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan Pérez" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" id="direccion" name="direccion" placeholder="Calle 123 - Ciudad" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="telefono">Teléfono de contacto</label>
+                        <input type="text" id="telefono" name="telefono" placeholder="Ej. +54 376 1234567">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" placeholder="juan@ejemplo.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="pago">Medio de pago</label>
+                    <select id="pago" name="pago" required>
+                        <option value="">-- Seleccionar --</option>
+                        <option value="tarjeta">Tarjeta de crédito / débito</option>
+                        <option value="transferencia">Transferencia bancaria</option>
+                        <option value="efectivo">Efectivo en boletería</option>
+                        <option value="mercadopago">Mercado Pago</option>
+                    </select>
+                </div>
+
+                <div class="products-box">
+                    <label>Seleccioná los productos a adquirir</label>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="prod1" name="productos" value="entrada" checked>
+                        <label for="prod1">Entrada general — $4.500</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="prod2" name="productos" value="entrada3d">
+                        <label for="prod2">Entrada 3D — $5.200</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="prod3" name="productos" value="combo1">
+                        <label for="prod3">Combo Popcorn Grande + Bebida — $3.200</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="prod4" name="productos" value="combo2">
+                        <label for="prod4">Nachos + Queso + Bebida — $2.800</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="prod5" name="productos" value="golosinas">
+                        <label for="prod5">Pack Golosinas — $1.900</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Confirmar pedido</button>
+            </form>
+        </div>
+
+        <div class="card" id="success-section" style="display:none;">
+            <div class="success-box">
+                <div class="icon">✅</div>
+                <h2>¡Compra confirmada!</h2>
+                <p style="color:#64748b; margin-bottom:8px;">
+                    Te enviamos el código y el QR a tu correo.
+                </p>
+                <p style="font-size:14px; color:#7a1d1e; font-weight:600;">
+                    Código de reserva: <span id="codigo-reserva">CL-XXXXXX</span>
+                </p>
+
+                <div class="qr-placeholder">
+                    [ QR CODE ]
+                </div>
+
+                <div class="guide-steps">
+                    <h3>¿Cómo retiro mi entrada y comida?</h3>
+                    <ol>
+                        <li>Al llegar al cine, dirigite a las <strong>máquinas de autoatención</strong> (están a la derecha de la boletería).</li>
+                        <li>Escaneá el <strong>código QR</strong> que recibiste por mail o ingresá el código de reserva.</li>
+                        <li>La máquina imprimirá tu entrada y, si compraste combo, te indicará el mostrador de comida.</li>
+                        <li>¡Listo! Disfrutá la función.</li>
+                    </ol>
+                </div>
+
+                <a href="index.html" class="btn-submit" style="display:inline-block; width:auto; padding:12px 32px; text-decoration:none;">
+                    Volver al inicio
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
+    </footer>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const hora = params.get('hora') || '18:30';
+        const sala = params.get('sala') || '2';
+        document.getElementById('hora-sel').textContent = hora;
+        document.getElementById('sala-sel').textContent = sala;
+
+        document.getElementById('compra-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const codigo = 'CL-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            document.getElementById('codigo-reserva').textContent = codigo;
+            document.getElementById('form-section').style.display = 'none';
+            document.getElementById('success-section').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
