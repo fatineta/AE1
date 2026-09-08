@@ -5,92 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinema Lights - Comprar</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-  .cine-conteiner{
-    width: 100%;
-    max-width: 540px;
-    margin: 10px auto;
-    padding: 30px 10px;
-    font-family: sans-serif;
-    border-radius: 12px;
-    background-color: #221515;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-
-
-  }
-  .pantalla{
-    background-color:black;
-    color:white;
-    text-align:center;
-    padding: 10px;
-    margin:0px auto 40px auto; /* el 40 es por la separacion*/
-    width: 80%;
-    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.4);
-    letter-spacing:2px;
-  }
-  .asientos-grid{
-    display:grid;
-    grid-template-columns: repeat(10, 40px);
-    gap:10px;
-    justify-content:center;
-    margin-top:20px;
-    margin-bottom: 20px;
-  }
-  .asiento{
-    width:40px;
-    height:40px;
-    background-color:green;
-    color:white;
-    border:none;
-    cursor:pointer;
-    border-radius: 4px;
-
-  }
-  .asiento.ocupado{
-    background-color:red;
-    cursor: not-allowed;
-  }
-  .asiento.seleccionado{
-    background-color:blue;
-    color:black;
-  }
-  
- .asiento:hover {
-    transform: scale(1.05); 
-  }
-.bton-submit{
-  background: color #800020;;
-  display:innline-block;
-  width:auto;
-  color:rgb(117, 0, 0);
-  border:1px solid rgb(117, 0, 0);
-  padding: 12px 40px;
-  font-size: 12px;
-  border-radius: 6px;
-}
-.bton-submit:hover{
-  background-color: #ff4d4d;
-  transform: scale(1.05);
-}
-
-</style>
 </head>
 
 
-<body>
+<body style="color: #fefefe;">
       <nav class="topnav">
         <a href="index.html" class="logo">Cinema <span>Lights</span></a>
         <div class="nav-links">
             <a href="index.html">Inicio</a>
             <a href="listado_tabla.html">Vista Tabla</a>
             <a href="listado_box.html">Vista Tarjetas</a>
-            <a href="comprar.html" class="active">Comprar</a>
-            <a href="login.html" class="btn-login">Login</a>
+                        <a href="login.html" class="btn-login">Login</a>
         </div>
     </nav>
       <h1 style="text-align:center; margin-top: 20px;">Elegí tu asiento</h1>
 
-  <div class="cine-conteiner">
+  <div class="cine-container">
     <div class="pantalla">
       <div class="pantalla">PANTALLA</div>
     </div>  
@@ -152,7 +82,26 @@
   <footer class="site-footer" style="padding-top: 20px; margin-top: 70px;">
     © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
   </footer>
-<script src="asientos.js"></script>
+<script>
+const asientos = document.querySelectorAll('.asiento.libre');
+
+asientos.forEach(asiento => {
+  asiento.addEventListener('click', () => {  
+    asiento.classList.toggle('seleccionado'); 
+  });
+});
+
+const botonConfirmar = document.getElementById('confirmar-btn');
+
+botonConfirmar.addEventListener('click', () => {
+  const asientosSeleccionados = document.querySelectorAll('.asiento.seleccionado');
+  if (asientosSeleccionados.length === 0) {
+    alert('Por favor, elegí al menos un asiento antes de continuar.');
+  } else {
+    window.location.href = 'comprar.html';
+  }
+});
+</script>
 
 </body>
 </html>
