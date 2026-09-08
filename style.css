@@ -8,7 +8,7 @@
 }
 
 body {
-    background-color: #f8f0f0;
+    background: url("https://cdn.pixabay.com/animation/2023/03/19/02/34/02-34-11-741_512.gif");
     color: #1a1a2e;
     min-height: 100vh;
     display: flex;
@@ -637,3 +637,71 @@ tbody tr:hover td {
         gap: 0;
     }
 }
+
+ .cine-container{
+    width: 100%;
+    max-width: 540px;
+    margin: 10px auto;
+    padding: 30px 10px;
+    font-family: sans-serif;
+    border-radius: 12px;
+    background-color: #221515;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+
+
+  }
+  .pantalla{
+    background-color:black;
+    color:white;
+    text-align:center;
+    padding: 10px;
+    margin:0px auto 40px auto; /* el 40 es por la separacion*/
+    width: 80%;
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.4);
+    letter-spacing:2px;
+  }
+  .asientos-grid{
+    display:grid;
+    grid-template-columns: repeat(10, 40px);
+    gap:10px;
+    justify-content:center;
+    margin-top:20px;
+    margin-bottom: 20px;
+  }
+  .asiento{
+    width:40px;
+    height:40px;
+    background-color:green;
+    color:white;
+    border:none;
+    cursor:pointer;
+    border-radius: 4px;
+
+  }
+  .asiento.ocupado{
+    background-color:red;
+    cursor: not-allowed;
+  }
+  .asiento.seleccionado{
+    background-color:blue;
+    color:black;
+  }
+  
+ .asiento:hover {
+    transform: scale(1.05); 
+  }
+.bton-submit{
+  background: color #800020;;
+  display:innline-block;
+  width:auto;
+  color:rgb(117, 0, 0);
+  border:1px solid rgb(117, 0, 0);
+  padding: 12px 40px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+.bton-submit:hover{
+  background-color: #ff4d4d;
+  transform: scale(1.05);
+}
+
