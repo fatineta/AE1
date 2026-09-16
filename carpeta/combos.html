@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Lights - Inicio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="topnav">
+        <a href="index.html" class="logo">Cinema <span>Lights</span></a>
+        <div class="nav-links">
+            <a href="index.html" class="active">Inicio</a>
+            <a href="listado_tabla.html">Vista Tabla</a>
+            <a href="listado_box.html">Vista Tarjetas</a>
+            <a href="comprar.html">Comprar</a>
+            <a href="login.html" class="btn-login">Login</a>
+        </div>
+    </nav>
+    <div class="candy-shop-container">
+        <h1>Combos</h1>
+        <p> Añade combos a tu carrito </p>
+        <form id="candy-form">
+
+            <div class="product-combo" data-name="Combo Balde" data-price="16000">
+                <div class="product-info">
+                    <span class="product-icon">🍿</span>
+                    <div>
+                        <h3> Combo Balde</h3>
+                        <p> 1 BALDE POLIPAPEL + 1 VASO DE GASEOSA DE 650ml O 1000ml </p>
+                        <span class="price">$ 16000</span>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <input type="number" class="quantity-input" value="0" min="0">
+                </div>
+
+            </div>
+
+
+            <div class="product-combo"data-name="Combo Pareja" data-price="21000">
+                <div class="product-info">
+                    <span class="product-icon">🍿</span>
+                    <div>
+                        <h3> Combo Pareja</h3>
+                        <p> 1 BALDE DE POLIPAPEL + 2 VASOS DE GASEOSA DE 650ml O 1000ml + UNA GOLOSINA LACASITO</p>
+                        <span class="price">$ 21000</span>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <input type="number" class="quantity-input" value="0" min="0">
+                </div>
+
+            </div>
+
+
+            <div class="product-combo" data-name="Combo Familia" data-price="35000">
+                <div class="product-info">
+                    <span class="product-icon">🍿</span>
+                    <div>
+                        <h3> COMBO FAMILIA</h3>
+                        <p> 2 BALDES POLIPAPEL + 4 GASEOSAS DE 21oz </p>
+                        <span class="price">$ 35000</span>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <input type="number" class="quantity-input" value="0" min="0">
+                </div>
+
+            </div>
+
+
+            <div class="product-combo" data-name="Combo Familia" data-price="18000">
+                <div class="product-info">
+                    <span class="product-icon">🍿</span>
+                    <div>
+                        <h3> COMBO FAMILIA</h3>
+                        <p> BALDE POLIPAPEL + VASO 1LTR COLECCIONABLE </p>
+                        <span class="price">$ 18000</span>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <input type="number" class="quantity-input" value="0" min="0">
+                </div>
+
+            </div>
+
+            <div class="product-combo" data-name="Combo Nacho Guacamole" data-price="14000">
+                <div class="product-info">
+                    <span class="product-icon">🍿</span>
+                    <div>
+                        <h3> COMBO NACHO GUACAMOLE</h3>
+                        <p> NACHO + VASO 650CC O VASO 1LTR </p>
+                        <span class="price">$ 14000</span>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <input type="number" class="quantity-input" value="0" min="0">
+                </div>
+
+            </div>
+
+            <div class="product-combo" data-price="5000">
+                <div class="product-info">
+                    <span class="product-icon">🍿</span>
+                    <div>
+                        <h3> COMBO NACHOS CHEDAR</h3>
+                        <p>NACHOS + 1 VASO DE GASEOSA DE 650ml O 1000ml </p>
+                        <span class="price">$ 14000</span>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <input type="number" class="quantity-input" value="0" min="0">
+                </div>
+
+            </div>
+
+            <div class="checkout-summary">
+                <h2> Total a pagar: <span id="total-price">$0</span> </h2>
+                <button type="submit" class="bton-submit">Confirmar pedido</button>
+                <button type="submit" class="bton-submit">Omitir</button>
+
+
+            </div>
+
+
+        </form>
+    </div>
+    <footer class="site-footer">
+        © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
+    </footer>
+
+    <script>
+        const inputs = document.querySelectorAll('.quantity-input');
+        const totalPriceEl = document.getElementById('total-price');
+        const candyForm = document.getElementById('candy-form');
+        const btnOmitir = document.getElementById('btn-omitir');
+
+        function calcularTotal() {
+            let total = 0;
+            document.querySelectorAll('.product-combo').forEach(combo => {
+                const precio = parseInt(combo.getAttribute('data-price')) || 0;
+                const cantidad = parseInt(combo.querySelector('.quantity-input').value) || 0;
+                total += precio * cantidad;
+            });
+            totalPriceEl.textContent = '$' + total.toLocaleString('es-AR');
+        }
+
+        inputs.forEach(input => {
+            input.addEventListener('input', calcularTotal);
+        });
+
+        function irAPagar(incluirCombos = true) {
+            const params = new URLSearchParams(window.location.search);
+
+            if (incluirCombos) {
+                const combosElegidos = [];
+                document.querySelectorAll('.product-combo').forEach(combo => {
+                    const cant = parseInt(combo.querySelector('.quantity-input').value) || 0;
+                    if (cant > 0) {
+                        const nombre = combo.getAttribute('data-name');
+                        combosElegidos.push(`${cant}x ${nombre}`);
+                    }
+                });
+                if (combosElegidos.length > 0) {
+                    params.set('combos', combosElegidos.join(' | '));
+                }
+            }
+
+            window.location.href = 'comprar.html?' + params.toString();
+        }
+
+        candyForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            irAPagar(true);
+        });
+
+        btnOmitir.addEventListener('click', () => {
+            irAPagar(false);
+        });
+    </script>
+</body>
+
+</html>

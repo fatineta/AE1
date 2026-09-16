@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Lights - Comprar</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+      <nav class="topnav">
+        <a href="index.html" class="logo">Cinema <span>Lights</span></a>
+        <div class="nav-links">
+            <a href="index.html">Inicio</a>
+            <a href="listado_tabla.html">Vista Tabla</a>
+            <a href="listado_box.html">Vista Tarjetas</a>
+            <a href="comprar.html" class="active">Comprar</a>
+            <a href="login.html" class="btn-login">Login</a>
+        </div>
+    </nav>
+      <h1 style="text-align:center; margin-top: 20px; color: aliceblue;">Elegí tu asiento</h1>
+
+  <div class="cine-conteiner">
+    <div class="pantalla">
+      <div class="pantalla">PANTALLA</div>
+    </div>  
+      <div class="asientos-grid">
+        <button class="asiento libre">A1</button>
+        <button class="asiento libre">A2</button>
+        <button class="asiento libre">A3</button>
+        <button class="asiento libre">A4</button>
+        <button class="asiento libre">A5</button> 
+        <button class="asiento libre">A6</button>
+        <button class="asiento libre">A7</button>
+        <button class="asiento libre">A8</button>
+        <button class="asiento libre">A9</button>
+        <button class="asiento libre">A10</button>
+
+        <button class="asiento libre">B1</button>
+        <button class="asiento libre">B2</button>
+        <button class="asiento libre">B3</button>
+        <button class="asiento libre">B4</button>
+        <button class="asiento libre">B5</button>
+        <button class="asiento libre">B6</button>
+        <button class="asiento libre">B7</button>
+        <button class="asiento libre">B8</button>
+        <button class="asiento libre">B9</button>
+        <button class="asiento libre">B10</button>
+
+        <button class="asiento libre">C1</button>
+        <button class="asiento libre">C2</button> 
+        <button class="asiento libre">C3</button>
+        <button class="asiento libre">C4</button>
+        <button class="asiento libre">C5</button>
+        <button class="asiento libre">C6</button>
+        <button class="asiento libre">C7</button>
+        <button class="asiento libre">C8</button>
+        <button class="asiento libre">C9</button>
+        <button class="asiento libre">C10</button>
+
+        <button class="asiento libre">D1</button>
+        <button class="asiento libre">D2</button>
+        <button class="asiento libre">D3</button>
+        <button class="asiento libre">D4</button>
+        <button class="asiento libre">D5</button>
+        <button class="asiento libre">D6</button>
+        <button class="asiento libre">D7</button>
+        <button class="asiento libre">D8</button>
+        <button class="asiento libre">D9</button>
+        <button class="asiento libre">D10</button>
+
+
+
+
+      </div>
+
+  </div>
+  
+  <div style="text-align:center; margin-top: 30px; margin-bottom: 30px;">
+    <button id="confirmar-btn" class="bton-submit">Confirmar selección</button>
+  </div>
+  <footer class="site-footer" style="padding-top: 20px; margin-top: 70px;">
+    © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
+  </footer>
+<script>
+  const asientos = document.querySelectorAll('.asiento.libre');
+
+  asientos.forEach(asiento => {
+    asiento.addEventListener('click', () => {  
+      asiento.classList.toggle('seleccionado'); 
+    });
+  });
+
+  const botonConfirmar = document.getElementById('confirmar-btn');
+
+  botonConfirmar.addEventListener('click', () => {
+    const asientosSeleccionados = document.querySelectorAll('.asiento.seleccionado');
+    if (asientosSeleccionados.length === 0) {
+      alert('Por favor, elegí al menos un asiento antes de continuar.');
+      return;
+    }
+
+    const paramsActuales = new URLSearchParams(window.location.search);
+    const codigosAsientos = Array.from(asientosSeleccionados).map(a => a.textContent);
+
+    paramsActuales.set('asientos', codigosAsientos.join(','));
+
+    window.location.href = 'combos.html?' + paramsActuales.toString();
+  });
+</script>
+
+</body>
+</html>
