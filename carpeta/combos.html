@@ -102,7 +102,7 @@
 
             </div>
 
-            <div class="product-combo" data-price="5000">
+            <div class="product-combo" data-name="Combo Nachos Cheddar" data-price="14000">
                 <div class="product-info">
                     <span class="product-icon">🍿</span>
                     <div>
@@ -133,27 +133,39 @@
     </footer>
 
     <script>
-        const inputs = document.querySelectorAll('.quantity-input');
+       // busca todos los campos donde se ingresa la cantidad
+       const inputs = document.querySelectorAll('.quantity-input');
+       //este selecciona donde se muestra el precio total       
         const totalPriceEl = document.getElementById('total-price');
+       //selecciona el formiulario donde estan los productos y el boton
         const candyForm = document.getElementById('candy-form');
+        //selecciona el boton de omitir
         const btnOmitir = document.getElementById('btn-omitir');
 
         function calcularTotal() {
             let total = 0;
+            // aca se recorre cada combo 
             document.querySelectorAll('.product-combo').forEach(combo => {
+                //lee el precio del combo del atributo html data-price
+                //parseInt trasforma en numero y bueno el ||0 por si esta vacio
                 const precio = parseInt(combo.getAttribute('data-price')) || 0;
+                //lee la cantidad ingresada
                 const cantidad = parseInt(combo.querySelector('.quantity-input').value) || 0;
                 total += precio * cantidad;
             });
+           //remplaza el valor con el total 
             totalPriceEl.textContent = '$' + total.toLocaleString('es-AR');
         }
-
+        
+        //cada vez que se presiona la flechita se "calcularTotal()"
         inputs.forEach(input => {
             input.addEventListener('input', calcularTotal);
         });
 
+        // aca lo que se busca es enviar a la siguiente pantalla
         function irAPagar(incluirCombos = true) {
             const params = new URLSearchParams(window.location.search);
+            // captura todo lo anterior de las entradas
 
             if (incluirCombos) {
                 const combosElegidos = [];
@@ -169,14 +181,221 @@
                 }
             }
 
+            // redirige hacai comprar.html con el combo seleccionado... esperemos jajaja
             window.location.href = 'comprar.html?' + params.toString();
         }
 
+        // aca se hace que cuando se presione 
+        // el boton de confirmar pedido se ejecute la funcion irAPagar
+        // para procesar y guardar combos elegidos y redirigir a comprar.html
         candyForm.addEventListener('submit', (e) => {
             e.preventDefault();
             irAPagar(true);
         });
 
+        // y bueno este es por si no le gusta comer en el cine
+        btnOmitir.addEventListener('click', () => {
+            irAPagar(false);
+        });
+    </script>
+</body>
+
+</html><!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Lights - Inicio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="topnav">
+        <a href="index.html" class="logo">Cinema <span>Lights</span></a>
+        <div class="nav-links">
+            <a href="index.html" class="active">Inicio</a>
+            <a href="listado_tabla.html">Vista Tabla</a>
+            <a href="listado_box.html">Vista Tarjetas</a>
+            <a href="comprar.html">Comprar</a>
+            <a href="login.html" class="btn-login">Login</a>
+        </div>
+    </nav>
+    <div class="candy-shop-container">
+        <h1>Combos</h1>
+        <p> Añade combos a tu carrito </p>
+        <form id="candy-form">
+
+            <div class="product-combo" data-name="Combo Balde" data-price="16000">
+                <div class="product-info">
+                    <span class="product-icon">🍿</span>
+                    <div>
+                        <h3> Combo Balde</h3>
+                        <p> 1 BALDE POLIPAPEL + 1 VASO DE GASEOSA DE 650ml O 1000ml </p>
+                        <span class="price">$ 16000</span>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <input type="number" class="quantity-input" value="0" min="0">
+                </div>
+
+            </div>
+
+
+            <div class="product-combo"data-name="Combo Pareja" data-price="21000">
+                <div class="product-info">
+                    <span class="product-icon">🍿</span>
+                    <div>
+                        <h3> Combo Pareja</h3>
+                        <p> 1 BALDE DE POLIPAPEL + 2 VASOS DE GASEOSA DE 650ml O 1000ml + UNA GOLOSINA LACASITO</p>
+                        <span class="price">$ 21000</span>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <input type="number" class="quantity-input" value="0" min="0">
+                </div>
+
+            </div>
+
+
+            <div class="product-combo" data-name="Combo Familia" data-price="35000">
+                <div class="product-info">
+                    <span class="product-icon">🍿</span>
+                    <div>
+                        <h3> COMBO FAMILIA</h3>
+                        <p> 2 BALDES POLIPAPEL + 4 GASEOSAS DE 21oz </p>
+                        <span class="price">$ 35000</span>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <input type="number" class="quantity-input" value="0" min="0">
+                </div>
+
+            </div>
+
+
+            <div class="product-combo" data-name="Combo Familia" data-price="18000">
+                <div class="product-info">
+                    <span class="product-icon">🍿</span>
+                    <div>
+                        <h3> COMBO FAMILIA</h3>
+                        <p> BALDE POLIPAPEL + VASO 1LTR COLECCIONABLE </p>
+                        <span class="price">$ 18000</span>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <input type="number" class="quantity-input" value="0" min="0">
+                </div>
+
+            </div>
+
+            <div class="product-combo" data-name="Combo Nacho Guacamole" data-price="14000">
+                <div class="product-info">
+                    <span class="product-icon">🍿</span>
+                    <div>
+                        <h3> COMBO NACHO GUACAMOLE</h3>
+                        <p> NACHO + VASO 650CC O VASO 1LTR </p>
+                        <span class="price">$ 14000</span>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <input type="number" class="quantity-input" value="0" min="0">
+                </div>
+
+            </div>
+
+            <div class="product-combo" data-name="Combo Nachos Cheddar" data-price="14000">
+                <div class="product-info">
+                    <span class="product-icon">🍿</span>
+                    <div>
+                        <h3> COMBO NACHOS CHEDAR</h3>
+                        <p>NACHOS + 1 VASO DE GASEOSA DE 650ml O 1000ml </p>
+                        <span class="price">$ 14000</span>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <input type="number" class="quantity-input" value="0" min="0">
+                </div>
+
+            </div>
+
+            <div class="checkout-summary">
+                <h2> Total a pagar: <span id="total-price">$0</span> </h2>
+                <button type="submit" class="bton-submit">Confirmar pedido</button>
+                <button type="submit" class="bton-submit">Omitir</button>
+
+
+            </div>
+
+
+        </form>
+    </div>
+    <footer class="site-footer">
+        © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
+    </footer>
+
+    <script>
+       // busca todos los campos donde se ingresa la cantidad
+       const inputs = document.querySelectorAll('.quantity-input');
+       //este selecciona donde se muestra el precio total       
+        const totalPriceEl = document.getElementById('total-price');
+       //selecciona el formiulario donde estan los productos y el boton
+        const candyForm = document.getElementById('candy-form');
+        //selecciona el boton de omitir
+        const btnOmitir = document.getElementById('btn-omitir');
+
+        function calcularTotal() {
+            let total = 0;
+            // aca se recorre cada combo 
+            document.querySelectorAll('.product-combo').forEach(combo => {
+                //lee el precio del combo del atributo html data-price
+                //parseInt trasforma en numero y bueno el ||0 por si esta vacio
+                const precio = parseInt(combo.getAttribute('data-price')) || 0;
+                //lee la cantidad ingresada
+                const cantidad = parseInt(combo.querySelector('.quantity-input').value) || 0;
+                total += precio * cantidad;
+            });
+           //remplaza el valor con el total 
+            totalPriceEl.textContent = '$' + total.toLocaleString('es-AR');
+        }
+        
+        //cada vez que se presiona la flechita se "calcularTotal()"
+        inputs.forEach(input => {
+            input.addEventListener('input', calcularTotal);
+        });
+
+        // aca lo que se busca es enviar a la siguiente pantalla
+        function irAPagar(incluirCombos = true) {
+            const params = new URLSearchParams(window.location.search);
+            // captura todo lo anterior de las entradas
+
+            if (incluirCombos) {
+                const combosElegidos = [];
+                document.querySelectorAll('.product-combo').forEach(combo => {
+                    const cant = parseInt(combo.querySelector('.quantity-input').value) || 0;
+                    if (cant > 0) {
+                        const nombre = combo.getAttribute('data-name');
+                        combosElegidos.push(`${cant}x ${nombre}`);
+                    }
+                });
+                if (combosElegidos.length > 0) {
+                    params.set('combos', combosElegidos.join(' | '));
+                }
+            }
+
+            // redirige hacai comprar.html con el combo seleccionado... esperemos jajaja
+            window.location.href = 'comprar.html?' + params.toString();
+        }
+
+        // aca se hace que cuando se presione 
+        // el boton de confirmar pedido se ejecute la funcion irAPagar
+        // para procesar y guardar combos elegidos y redirigir a comprar.html
+        candyForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            irAPagar(true);
+        });
+
+        // y bueno este es por si no le gusta comer en el cine
         btnOmitir.addEventListener('click', () => {
             irAPagar(false);
         });
