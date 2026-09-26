@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARTEC S.R.L. Asignación de recursos por Programación Lineal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo:wght@500;600;800&display=swap" rel="stylesheet">
+
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Archivo", sans-serif;
+}
+ 
+body {
+    background-color: #EAF1F7;
+    color: #12324D;
+    padding: 30px 15px 50px 15px;
+}
+ 
+.wrap {
+    max-width: 950px;
+    margin: 0 auto;
+}
+ 
+header {
+    border-bottom: 3px solid #12324D;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+ 
+.kicker {
+    font-family: "Space Mono", monospace;
+    font-size: 12px;
+    color: #E1622F;
+    margin-bottom: 6px;
+}
+ 
+h1 {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    max-width: 640px;
+}
+ 
+.sub {
+    font-size: 14px;
+    color: #4A6B85;
+    max-width: 640px;
+    line-height: 1.5;
+}
+ 
+.grid {
+    display: flex;
+    gap: 22px;
+}
+ 
+.grid .panel:first-child {
+    width: 360px;
+    flex-shrink: 0;
+}
+ 
+.grid .panel:last-child {
+    flex: 1;
+}
+ 
+@media (max-width: 800px) {
+    .grid {
+        flex-direction: column;
+    }
+    .grid .panel:first-child {
+        width: 100%;
+    }
+}
+ 
+/* paneles */
+.panel {
+    background-color: #ffffff;
+    border: 1.5px solid #12324D;
+    border-radius: 6px;
+    padding: 20px;
+}
+ 
+.panel h2 {
+    font-family: "Space Mono", monospace;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+ 
+.panel .hint {
+    font-size: 12px;
+    color: #4A6B85;
+    line-height: 1.5;
+    margin-bottom: 14px;
+}
+ 
+/* form de las restricciones */
+fieldset {
+    border: 1px solid #B9D3E4;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+ 
+legend {
+    font-family: "Space Mono", monospace;
+    font-size: 11px;
+    color: #4A6B85;
+    padding: 0 5px;
+}
+ 
+.row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "Space Mono", monospace;
+    font-size: 13px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+ 
+input[type="number"] {
+    width: 60px;
+    font-family: "Space Mono", monospace;
+    font-size: 14px;
+    border: 1px solid #12324D;
+    border-radius: 4px;
+    padding: 5px;
+    color: #12324D;
+}
+ 
+.objective input {
+    width: 100px;
+}
+ 
+/* boton */
+button {
+    width: 100%;
+    background-color: #12324D;
+    color: #ffffff;
+    font-family: "Space Mono", monospace;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+ 
+button:hover {
+    background-color: #E1622F;
+}
+ 
+.result-line {
+    font-family: "Space Mono", monospace;
+    font-size: 13px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed #B9D3E4;
+    color: #4A6B85;
+}
+ 
+.result-line strong {
+    color: #12324D;
+}
+ 
+/* grafico y tabla */
+svg {
+    width: 100%;
+    display: block;
+}
+ 
+.plot-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+ 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Space Mono", monospace;
+    font-size: 12px;
+}
+ 
+th, td {
+    text-align: left;
+    padding: 7px;
+    border-bottom: 1px solid #B9D3E4;
+}
+ 
+th {
+    color: #4A6B85;
+}
+ 
+tr.optimal td {
+    background-color: #F7DBCB;
+    font-weight: 700;
+}
+ 
+.tag {
+    background-color: #2E7D5B;
+    color: #ffffff;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+}
+ 
+.status {
+    font-family: "Space Mono", monospace;
+    font-size: 13px;
+    padding: 10px;
+    border-left: 3px solid #E1622F;
+    background-color: #F7DBCB;
+    display: none;
+}
+ 
+.status.show {
+    display: block;
+}
+ 
+footer {
+    margin-top: 30px;
+    font-family: "Space Mono", monospace;
+    font-size: 11px;
+    color: #4A6B85;
+    line-height: 1.6;
+    border-top: 1px solid #B9D3E4;
+    padding-top: 12px;
+}
+</style>
+
+</head>
+<body>
+
+
+<div class="wrap">
+ 
+  <header>
+    <p class="kicker">AA16: INTERCATEDRA · INVESTIGACION OPERATIVA + PARADIGMAS Y LENGUAJE DE PROGRAMACION III</p>
+    <h1>Asignacion de recursos entre viviendas y escuelas — ARTEC S.R.L.</h1>
+    <p class="sub">Implementacion en JavaScript Vanilla (Opción B) del modelo de Programación Lineal formulado en el AE1 de Investigacion Operativa. El formulario reproduce las restricciones reales relevadas en la entrevista; la funcion objetivo queda a cargo de quien la usa, ya que la empresa no pudo precisar un margen de utilidad exacto por m².</p>
+  </header>
+ 
+  <div class="grid">
+ 
+    <div class="panel">
+      <h2>01 · Datos del modelo</h2>
+      <p class="hint">X₁ = m² de vivienda unifamiliar a construir · X₂ = m² de escuela a construir, en el período.</p>
+ 
+      <fieldset>
+        <legend>funcion objetivo</legend>
+        <div class="row objective">
+          <span>Maximizar Z =</span>
+          <input type="number" id="c1" value="" placeholder="c₁" step="any">
+          <span>X₁ +</span>
+          <input type="number" id="c2" value="" placeholder="c₂" step="any">
+          <span>X₂</span>
+        </div>
+        <p class="hint" style="margin:8px 0 0;">Ingresa un valor estimado (ej. margen por m²) para cada tipologia. Si se dejan en 0, la herramienta solo delimita la region factible.</p>
+      </fieldset>
+ 
+      <fieldset>
+        <legend>restriccion · mano de obra</legend>
+        <div class="row">
+          <input type="number" id="a1" value="4" step="any"><span>X₁ +</span>
+          <input type="number" id="b1" value="5" step="any"><span>X₂ ≤</span>
+          <input type="number" id="k1" value="500" step="any">
+        </div>
+        <p class="hint" style="margin:6px 0 0;">5 oficiales carpinteros/herreros disponibles.</p>
+      </fieldset>
+ 
+      <fieldset>
+        <legend>restriccion · maquinaria</legend>
+        <div class="row">
+          <input type="number" id="a2" value="1" step="any"><span>X₁ +</span>
+          <input type="number" id="b2" value="1" step="any"><span>X₂ ≤</span>
+          <input type="number" id="k2" value="280" step="any">
+        </div>
+        <p class="hint" style="margin:6px 0 0;">2 retroexcavadoras + 2 Bobcats.</p>
+      </fieldset>
+ 
+      <fieldset>
+        <legend>restriccion · deposito</legend>
+        <div class="row">
+          <input type="number" id="a3" value="0.5" step="any"><span>X₁ +</span>
+          <input type="number" id="b3" value="0.9" step="any"><span>X₂ ≤</span>
+          <input type="number" id="k3" value="324" step="any">
+        </div>
+        <p class="hint" style="margin:6px 0 0;">m² de deposito disponible.</p>
+      </fieldset>
+ 
+      <button id="solve-btn" type="button">Calcular solucion optima</button>
+ 
+      <div class="result-line" id="result-line">Carga los coeficientes y presiona Calcular.</div>
+    </div>
+ 
+    <div class="panel plot-panel">
+      <h2>02 · Regian factible y vertices</h2>
+      <div class="status" id="status"></div>
+      <svg id="plot" viewBox="0 0 560 520" xmlns="http://www.w3.org/2000/svg"></svg>
+      <table id="vertex-table" style="display:none;">
+        <thead><tr><th>Vertice</th><th>X₁</th><th>X₂</th><th>Z</th></tr></thead>
+        <tbody id="vertex-body"></tbody>
+      </table>
+    </div>
+ 
+  </div>
+ 
+  <footer>
+    Método: evaluacion de vertices de la región factible (metodo grafico). El DOM se actualiza con addEventListener al presionar "Calcular solucion optima" (sin recargar la pagina ni depender de librerias externas de optimizacion (Opcion B de la consigna)).
+  </footer>
+ 
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const btn = $('solve-btn');
+  const svg = $('plot');
+  const statusBox = $('status');
+  const resultLine = $('result-line');
+  const table = $('vertex-table');
+  const tbody = $('vertex-body');
+ 
+  const EPS = 1e-6;
+ 
+  function getConstraints(){
+    return [1,2,3].map(i => ({
+      a: parseFloat($('a'+i).value) || 0,
+      b: parseFloat($('b'+i).value) || 0,
+      c: parseFloat($('k'+i).value) || 0,
+      label: ['Mano de obra','Maquinaria','Depósito'][i-1]
+    }));
+  }
+ 
+  function solve2x2(a1,b1,c1,a2,b2,c2){
+    const det = a1*b2 - a2*b1;
+    if (Math.abs(det) < EPS) return null;
+    return {
+      x: (c1*b2 - c2*b1) / det,
+      y: (a1*c2 - a2*c1) / det
+    };
+  }
+ 
+  function feasible(pt, constraints){
+    if (pt.x < -EPS || pt.y < -EPS) return false;
+    return constraints.every(k => k.a*pt.x + k.b*pt.y <= k.c + 1e-4);
+  }
+ 
+  function computeVertices(constraints){
+    const candidates = [{x:0,y:0}];
+ 
+    constraints.forEach(k => {
+      if (Math.abs(k.a) > EPS) candidates.push({x: k.c/k.a, y: 0});
+      if (Math.abs(k.b) > EPS) candidates.push({x: 0, y: k.c/k.b});
+    });
+ 
+    for (let i = 0; i < constraints.length; i++){
+      for (let j = i+1; j < constraints.length; j++){
+        const p = solve2x2(
+          constraints[i].a, constraints[i].b, constraints[i].c,
+          constraints[j].a, constraints[j].b, constraints[j].c
+        );
+        if (p) candidates.push(p);
+      }
+    }
+ 
+    const feasiblePts = candidates.filter(p => feasible(p, constraints));
+ 
+    const seen = [];
+    feasiblePts.forEach(p => {
+      const dup = seen.some(s => Math.abs(s.x-p.x) < 1e-4 && Math.abs(s.y-p.y) < 1e-4);
+      if (!dup) seen.push({x: Math.max(0,p.x), y: Math.max(0,p.y)});
+    });
+ 
+    if (seen.length < 3) return seen;
+ 
+    const cx = seen.reduce((s,p)=>s+p.x,0)/seen.length;
+    const cy = seen.reduce((s,p)=>s+p.y,0)/seen.length;
+    seen.sort((p,q) => Math.atan2(p.y-cy, p.x-cx) - Math.atan2(q.y-cy, q.x-cx));
+    return seen;
+  }
+ 
+  function render(vertices, constraints, c1, c2, hasObjective, optimalIdx){
+    const maxX = Math.max(10, ...vertices.map(v=>v.x)) * 1.25;
+    const maxY = Math.max(10, ...vertices.map(v=>v.y)) * 1.25;
+    const pad = 56, W = 560, H = 520;
+    const plotW = W - pad*2, plotH = H - pad*2;
+    const sx = x => pad + (x/maxX)*plotW;
+    const sy = y => H - pad - (y/maxY)*plotH;
+ 
+    let svgParts = [];
+ 
+    svgParts.push(`<line x1="${pad}" y1="${H-pad}" x2="${W-pad}" y2="${H-pad}" stroke="#12324D" stroke-width="1.5"/>`);
+    svgParts.push(`<line x1="${pad}" y1="${pad}" x2="${pad}" y2="${H-pad}" stroke="#12324D" stroke-width="1.5"/>`);
+    svgParts.push(`<text x="${W-pad}" y="${H-pad+22}" font-family="Space Mono, monospace" font-size="12" fill="#4A6B85" text-anchor="end">X₁ (m² vivienda)</text>`);
+    svgParts.push(`<text x="${pad-8}" y="${pad-10}" font-family="Space Mono, monospace" font-size="12" fill="#4A6B85" text-anchor="start">X₂ (m² escuela)</text>`);
+ 
+    if (vertices.length >= 3){
+      const pts = vertices.map(v => `${sx(v.x)},${sy(v.y)}`).join(' ');
+      svgParts.push(`<polygon points="${pts}" fill="#E1622F" fill-opacity="0.18" stroke="none"/>`);
+    }
+ 
+    const colors = ['#12324D','#2E7D5B','#8B5A2B'];
+    constraints.forEach((k, idx) => {
+      let p1, p2;
+      if (Math.abs(k.b) > EPS){
+        p1 = {x:0, y: k.c/k.b};
+        p2 = Math.abs(k.a) > EPS ? {x: k.c/k.a, y:0} : {x: maxX, y: k.c/k.b};
+      } else if (Math.abs(k.a) > EPS){
+        p1 = {x: k.c/k.a, y:0};
+        p2 = {x: k.c/k.a, y: maxY};
+      } else return;
+      svgParts.push(`<line x1="${sx(p1.x)}" y1="${sy(p1.y)}" x2="${sx(p2.x)}" y2="${sy(p2.y)}" stroke="${colors[idx%3]}" stroke-width="1.5" stroke-dasharray="5 3"/>`);
+    });
+ 
+    vertices.forEach((v, idx) => {
+      const isOpt = hasObjective && idx === optimalIdx;
+      svgParts.push(`<circle cx="${sx(v.x)}" cy="${sy(v.y)}" r="${isOpt?7:4.5}" fill="${isOpt?'#E1622F':'#12324D'}" stroke="#fff" stroke-width="1.5"/>`);
+      svgParts.push(`<text x="${sx(v.x)+9}" y="${sy(v.y)-8}" font-family="Space Mono, monospace" font-size="11" fill="#12324D">(${v.x.toFixed(1)}, ${v.y.toFixed(1)})</text>`);
+    });
+ 
+    svg.innerHTML = svgParts.join('');
+  }
+ 
+  function run(){
+    const constraints = getConstraints();
+    const c1 = parseFloat($('c1').value) || 0;
+    const c2 = parseFloat($('c2').value) || 0;
+    const hasObjective = ($('c1').value.trim() !== '') || ($('c2').value.trim() !== '');
+ 
+    const vertices = computeVertices(constraints);
+ 
+    if (vertices.length === 0){
+      statusBox.textContent = 'No se encontró una región factible con estos valores: revisá los coeficientes.';
+      statusBox.classList.add('show');
+      table.style.display = 'none';
+      resultLine.textContent = 'Sin solución factible.';
+      svg.innerHTML = '';
+      return;
+    }
+    statusBox.classList.remove('show');
+ 
+    let optimalIdx = -1, bestZ = -Infinity;
+    const zValues = vertices.map((v,i) => {
+      const z = c1*v.x + c2*v.y;
+      if (hasObjective && z > bestZ){ bestZ = z; optimalIdx = i; }
+      return z;
+    });
+ 
+    render(vertices, constraints, c1, c2, hasObjective, optimalIdx);
+ 
+    tbody.innerHTML = '';
+    vertices.forEach((v,i) => {
+      const tr = document.createElement('tr');
+      if (hasObjective && i === optimalIdx) tr.classList.add('optimal');
+      tr.innerHTML = `<td>V${i+1}${hasObjective && i===optimalIdx ? '<span class="tag">óptimo</span>':''}</td>
+        <td>${v.x.toFixed(2)}</td><td>${v.y.toFixed(2)}</td><td>${zValues[i].toFixed(2)}</td>`;
+      tbody.appendChild(tr);
+    });
+    table.style.display = 'table';
+ 
+    if (hasObjective){
+      const opt = vertices[optimalIdx];
+      resultLine.innerHTML = `Solución óptima: <strong>X₁ = ${opt.x.toFixed(2)} m²</strong>, <strong>X₂ = ${opt.y.toFixed(2)} m²</strong> → <strong>Z = ${bestZ.toFixed(2)}</strong>`;
+    } else {
+      resultLine.textContent = `Región factible con ${vertices.length} vértices. Ingresá c₁ y c₂ para obtener el punto óptimo.`;
+    }
+  }
+ 
+  btn.addEventListener('click', run);
+  run();
+})();
+</script>
+
+</body>
+</html>
