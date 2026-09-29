@@ -61,9 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
             params.set('asientos', codigos.join(','));
             window.location.href = 'combos.html?' + params.toString();
         });
-    }
+    };
 
--
+
     const candyForm = document.getElementById('candy-form');
     const listaCombos = document.getElementById('lista-combos');
     const contenedorCombos = document.querySelector('.candy-shop-container') || listaCombos;
