@@ -1,0 +1,44 @@
+[
+    {
+        "id": "combo-balde",
+        "titulo": "Combo Balde",
+        "descripcion": "1 BALDE POLIPAPEL + 1 VASO DE GASEOSA DE 650ml O 1000ml",
+        "precio": 16000,
+        "imagen": "https://cuponassetsv2.cuponatic-latam.com/backendCo/uploads/imagenes_descuentos/220705/6cd4c2eac5303206b2e2a85f9c2b42d6109199ac.S.jpg"
+    },
+    {
+        "id": "combo-pareja",
+        "titulo": "Combo Pareja",
+        "descripcion": "1 BALDE DE POLIPAPEL + 2 VASOS DE GASEOSA DE 650ml O 1000ml + UNA GOLOSINA LACASITO",
+        "precio": 21000,
+        "imagen": "https://bonnus.me/wp-content/uploads/2025/06/MixtoWeb.png"
+    },
+    {
+        "id": "combo-familia-1",
+        "titulo": "COMBO FAMILIA",
+        "descripcion": "2 BALDES POLIPAPEL + 4 GASEOSAS DE 21oz",
+        "precio": 35000,
+        "imagen": "assets/img/combo-familia.png"
+    },
+    {
+        "id": "combo-familia-2",
+        "titulo": "COMBO FAMILIA",
+        "descripcion": "BALDE POLIPAPEL + VASO 1LTR COLECCIONABLE",
+        "precio": 18000,
+        "imagen": "assets/img/combo-familia-2.png"
+    },
+    {
+        "id": "combo-nacho-guacamole",
+        "titulo": "Combo Nachos Guacamole",
+        "descripcion": "NACHO + VASO 650CC O VASO 1LTR",
+        "precio": 14000,
+        "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6kcloVy7K_XIxmJAeuG8geIMoD4kywzMU_kFcz6YopGrK5X1_Vn6avaJI&s=10"
+    },
+    {
+        "id": "combo-nacho-chedar",
+        "titulo": "Combo Nachos Chedar",
+        "descripcion": "NACHO + 1 VASO 650ml o 1000ml",
+        "precio": 14000,
+        "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6kcloVy7K_XIxmJAeuG8geIMoD4kywzMU_kFcz6YopGrK5X1_Vn6avaJI&s=10"
+    }
+]
