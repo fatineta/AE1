@@ -88,41 +88,6 @@
     © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
   </footer>
 
-<script>
-const asientos = document.querySelectorAll('.asiento.libre');
-const totalPriceEl = document.getElementById('total-price');
-const botonConfirmar = document.getElementById('confirmar-btn');
-
-function calcularTotal() {
-    let total = 0;
-    document.querySelectorAll('.asiento.seleccionado').forEach(asiento => {
-        total += parseInt(asiento.getAttribute('data-price')) || 0;
-    });
-    totalPriceEl.textContent = '$' + total.toLocaleString('es-AR');
-}
-
-asientos.forEach(asiento => {
-    asiento.addEventListener('click', () => {
-        asiento.classList.toggle('seleccionado');
-        calcularTotal();
-    });
-});
-
-botonConfirmar.addEventListener('click', () => {
-    const asientosSeleccionados = document.querySelectorAll('.asiento.seleccionado');
-    if (asientosSeleccionados.length === 0) {
-        alert('Por favor, elegí al menos un asiento antes de continuar.');
-        return;
-    }
-
-    const paramsActuales = new URLSearchParams(window.location.search);
-    const codigosAsientos = Array.from(asientosSeleccionados).map(a => a.textContent);
-
-    paramsActuales.set('asientos', codigosAsientos.join(','));
-
-    // Redirige a la selección de combos trasladando los parámetros en la URL
-    window.location.href = 'combos.html?' + paramsActuales.toString();
-});
-</script>
+<script src="app.js"></script>
 </body>
 </html>
