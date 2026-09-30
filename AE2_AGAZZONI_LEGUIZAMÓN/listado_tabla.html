@@ -5,16 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinema Lights - Vista Tabla</title>
     <link rel="stylesheet" href="style.css">
+    <script src="app.js"></script>
 </head>
 <body>
     <nav class="topnav">
         <a href="index.html" class="logo">Cinema <span>Lights</span></a>
         <div class="nav-links">
-            <a href="index.html">Inicio</a>
+            <a href="index.html" class="active">Inicio</a>
             <a href="listado_tabla.html">Vista Tabla</a>
-            <a href="listado_box.html" class="active">Vista Tarjetas</a>
-            <a href="metricas.html" class="active">Métricas</a>
-            <a href="login.html" class="btn-login"title="Registrate para objeter cupones de descuentos">Login</a>
+            <a href="listado_box.html">Vista Tarjetas</a>
+            <a href="metricas.html">Métricas</a>
+            <a href="login.html" class="btn-login">Login</a>
         </div>
     </nav>
 
@@ -24,53 +25,6 @@
             <p class="subtitle">
                 Listado formal de todas las películas en cartelera.
             </p>
-                        <div class="date-picker-wrapper">
-                <p class="date-picker-title">SELECCIONÁ EL DÍA DE TU PREFERENCIA</p>
-                <div class="date-carousel">
-                    <button type="button" class="date-nav-btn" id="prevDate">&lt;</button>
-                    
-                    <div class="date-cards-container" id="dateCardsContainer">
-                        <div class="date-card active">
-                            <span class="day-name">Sábado</span>
-                            <span class="day-number">12</span>
-                            <span class="month-name">Septiembre</span>
-                        </div>
-                        <div class="date-card">
-                            <span class="day-name">Domingo</span>
-                            <span class="day-number">13</span>
-                            <span class="month-name">Septiembre</span>
-                        </div>       
-                        <div class="date-card">
-                            <span class="day-name">Lunes</span>
-                            <span class="day-number">14</span>
-                            <span class="month-name">Septiembre</span>
-                        </div>
-                        <div class="date-card">
-                            <span class="day-name">Martes</span>
-                            <span class="day-number">15</span> 
-                            <span class="month-name">Septiembre</span>
-                        </div>
-                        <div class="date-card">
-                            <span class="day-name">Miércoles</span>
-                            <span class="day-number">16</span>
-                            <span class="month-name">Septiembre</span>
-                        </div>
-                        <div class="date-card">
-                            <span class="day-name">Jueves</span>
-                            <span class="day-number">17</span>
-                            <span class="month-name">Septiembre</span>
-                        </div>
-                        <div class="date-card">
-                            <span class="day-name">Viernes</span>
-                            <span class="day-number">18</span>
-                            <span class="month-name">Septiembre</span>
-                        </div>
-                    </div>
-
-                    <button type="button" class="date-nav-btn" id="nextDate">&gt;</button>    
-                </div>
-            </div>
-
 
             <div class="table-responsive">
                 <table>
@@ -80,7 +34,7 @@
                             <th>Película</th>
                             <th>Clasificación</th>
                             <th>Género</th>
-                            <th>Precio desde</th>
+                            <th>Precio</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -90,7 +44,7 @@
                             <td>Spider-Man: Brand New Day</td>
                             <td>+13</td>
                             <td>Acción / Fantasía</td>
-                            <td>$4.500</td>
+                            <td>$4.800</td>
                             <td><a href="producto.html?peli=spiderman" class="link-detalle">Ver ficha</a></td>
                         </tr>
                         <tr>
@@ -98,13 +52,13 @@
                             <td>Obsession</td>
                             <td>+18</td>
                             <td>Thriller</td>
-                            <td>$4.200</td>
+                            <td>$4.800</td>
                             <td><a href="producto.html?peli=obsession" class="link-detalle">Ver ficha</a></td>
                         </tr>
                         <tr>
                             <td class="codigo">#003</td>
                             <td>Wicked</td>
-                            <td>+10</td>
+                            <td>+13</td>
                             <td>Musical / Fantasía</td>
                             <td>$4.800</td>
                             <td><a href="producto.html?peli=wicked" class="link-detalle">Ver ficha</a></td>
@@ -114,7 +68,7 @@
                             <td>Crepúsculo</td>
                             <td>+13</td>
                             <td>Romance / Fantasía</td>
-                            <td>$5.000</td>
+                            <td>$4.800</td>
                             <td><a href="producto.html?peli=crepusculo" class="link-detalle">Ver ficha</a></td>
                         </tr>
                         <tr>
@@ -122,7 +76,7 @@
                             <td>Chainsaw Man: Reze Arc</td>
                             <td>+16</td>
                             <td>Anime / Acción</td>
-                            <td>$3.900</td>
+                            <td>$4.800</td>
                             <td><a href="producto.html?peli=chainsawman" class="link-detalle">Ver ficha</a></td>
                         </tr>
                         <tr>
@@ -130,7 +84,7 @@
                             <td>Spider-Man: Across the Spider-Verse</td>
                             <td>+10</td>
                             <td>Animación / Acción</td>
-                            <td>$4.600</td>
+                            <td>$4.800</td>
                             <td><a href="producto.html?peli=spiderverse" class="link-detalle">Ver ficha</a></td>
                         </tr>
                     </tbody>
@@ -142,33 +96,5 @@
     <footer class="site-footer">
         © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
     </footer>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const cards = document.querySelectorAll(".date-card");
-            const container = document.getElementById("dateCardsContainer");
-            const prevBtn = document.getElementById("prevDate");
-            const nextBtn = document.getElementById("nextDate");
-
-            cards.forEach((card) => {
-                card.addEventListener("click", () => {
-                    const currentActive = document.querySelector(".date-card.active");
-                    if (currentActive) {
-                        currentActive.classList.remove("active");
-                    }
-                    card.classList.add("active");
-                });
-            });
-
-            if (prevBtn && nextBtn && container) {
-                prevBtn.addEventListener("click", () => {
-                    container.scrollBy({ left: -160, behavior: "smooth" });
-                });
-
-                nextBtn.addEventListener("click", () => {
-                    container.scrollBy({ left: 160, behavior: "smooth" });
-                });
-            }
-        });
-    </script>
 </body>
 </html>
