@@ -1,9 +1,7 @@
-
 const PRECIO_ASIENTO = 4800;
 let descuentoCupon = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
-
 
     function toggleForms() {
         const login = document.getElementById('login-form');
@@ -25,6 +23,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    const formLogin = document.getElementById('form-login');
+    if (formLogin) {
+        formLogin.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Sesión iniciada (simulación)');
+            window.location.assign('index.html');
+        });
+    }
+
+    const formRegistro = document.getElementById('form-registro');
+    if (formRegistro) {
+        formRegistro.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Cuenta creada (simulación)');
+            window.location.assign('index.html');
+        });
+    }
 
     const asientos = document.querySelectorAll('.asiento.libre');
     const totalPriceAsientos = document.getElementById('total-price');
@@ -61,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             params.set('asientos', codigos.join(','));
             window.location.href = 'combos.html?' + params.toString();
         });
-    };
+    }
 
 
     const candyForm = document.getElementById('candy-form');
@@ -90,14 +105,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function renderizarCombos(combos) {
-            // Destino: #lista-combos si existe, si no el #candy-form
             const destino = listaCombos || candyForm;
             if (!destino) return;
 
             destino.querySelectorAll('.product-combo').forEach(el => el.remove());
 
             combos.forEach(combo => {
-                // El JSON puede usar titulo/nombre e imagen/icono
                 const nombre = combo.titulo || combo.nombre || 'Combo';
                 const precio = Number(combo.precio) || 0;
                 const descripcion = combo.descripcion || '';
@@ -372,7 +385,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         async function obtenerMetricas() {
             try {
-                // ?t=Date.now() evita que el navegador use la versión cacheada
                 const respuesta = await fetch('data/metricas.json?t=' + Date.now());
                 if (!respuesta.ok) {
                     throw new Error('No se pudieron cargar las métricas');
