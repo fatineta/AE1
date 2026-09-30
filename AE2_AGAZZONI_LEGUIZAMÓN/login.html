@@ -5,16 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinema Lights - Login</title>
     <link rel="stylesheet" href="style.css">
+    <script src="app.js"></script>
 </head>
 <body>
     <nav class="topnav">
         <a href="index.html" class="logo">Cinema <span>Lights</span></a>
         <div class="nav-links">
-            <a href="index.html">Inicio</a>
+            <a href="index.html" class="active">Inicio</a>
             <a href="listado_tabla.html">Vista Tabla</a>
-            <a href="listado_box.html" class="active">Vista Tarjetas</a>
-            <a href="metricas.html" class="active">Métricas</a>
-            <a href="login.html" class="btn-login" title="Registrate para obtener cupones de descuentos">Login</a>
+            <a href="listado_box.html">Vista Tarjetas</a>
+            <a href="metricas.html">Métricas</a>
+            <a href="login.html" class="btn-login">Login</a>
         </div>
     </nav>
 
@@ -24,7 +25,7 @@
                 <h1>Iniciar sesión</h1>
                 <p class="subtitle">Ingresá con tu cuenta para comprar más rápido</p>
 
-                <form id="form-login">
+                <form onsubmit="event.preventDefault(); alert('Sesión iniciada (simulación)'); window.location.href='index.html';">
                     <div class="form-group">
                         <label for="login-email">Correo electrónico</label>
                         <input type="email" id="login-email" name="email" placeholder="tu@email.com" required>
@@ -45,7 +46,7 @@
                 <h1>Crear cuenta</h1>
                 <p class="subtitle">Registrate para acceder a la cartelera y comprar entradas</p>
 
-                <form id="form-registro">
+                <form>
                     <div class="form-group">
                         <label for="reg-nombre">Nombre completo</label>
                         <input type="text" id="reg-nombre" name="nombre" placeholder="Juan Pérez" required>
@@ -53,6 +54,10 @@
                     <div class="form-group">
                         <label for="reg-email">Correo electrónico</label>
                         <input type="email" id="reg-email" name="email" placeholder="tu@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Contraseña</label>
+                        <input type="password" id="reg-password" name="password" placeholder="••••••••" required>
                     </div>
                     <button type="submit" class="btn-submit">Registrarme</button>
                 </form>
@@ -68,6 +73,6 @@
         © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
     </footer>
 
-    <script src="script.js"></script>
+
 </body>
 </html>
