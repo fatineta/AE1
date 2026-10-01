@@ -793,7 +793,7 @@ tbody tr:hover td {
   background-color: #ff4d4d;
   transform: scale(1.05);
 }
-/* este es solo para la fecha */
+
 .date-picker-wrapper {
     text-align: center;
     margin-bottom: 32px;
