@@ -14,7 +14,7 @@
             <a href="listado_tabla.html">Vista Tabla</a>
             <a href="listado_box.html" class="active">Vista Tarjetas</a>
             <a href="metricas.html" class="active">Métricas</a>
-            <a href="login.html" class="btn-login"title="Registrate para objeter cupones de descuentos">Login</a>
+            <a href="login.html" class="btn-login" title="Registrate para obtener cupones de descuentos">Login</a>
         </div>
     </nav>
 
@@ -25,7 +25,7 @@
 
             <div class="metricas-controles">
                 <label for="selector-metricas">Métrica:</label>
-                <select id="selector-metricas">
+                <select id="selector-metricas" data-role="selector-metricas">
                     <option value="">-- Seleccionar --</option>
                     <option value="entradas">Entradas vendidas</option>
                     <option value="combos">Combos vendidos</option>
@@ -33,12 +33,12 @@
                     <option value="recaudacion">Recaudación total</option>
                 </select>
 
-                <button type="button" id="btn-actualizar-metricas" class="btn-submit">
+                <button type="button" data-action="actualizar-metricas" class="btn-submit">
                     Actualizar
                 </button>
             </div>
 
-            <div id="resultado-metricas" class="resultado-metricas">
+            <div data-role="resultado-metricas" class="resultado-metricas">
                 <p class="placeholder">Seleccioná una métrica para ver los datos.</p>
             </div>
         </section>
