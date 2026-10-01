@@ -4,8 +4,8 @@ let descuentoCupon = 0;
 document.addEventListener('DOMContentLoaded', () => {
 
     function toggleForms() {
-        const login = document.getElementById('login-form');
-        const register = document.getElementById('register-form');
+        const login = document.querySelector('[data-role="login-panel"]');
+        const register = document.querySelector('[data-role="register-panel"]');
         if (!login || !register) return;
 
         const loginOculto = login.style.display === 'none';
@@ -13,17 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
         register.style.display = loginOculto ? 'none' : 'block';
     }
 
-    ['toggle-register', 'toggle-login'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.addEventListener('click', (e) => {
-                e.preventDefault();
-                toggleForms();
-            });
-        }
+    document.querySelectorAll('[data-action="toggle-register"], [data-action="toggle-login"]').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleForms();
+        });
     });
 
-    const formLogin = document.getElementById('form-login');
+    const formLogin = document.querySelector('[data-role="form-login"]');
     if (formLogin) {
         formLogin.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -32,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const formRegistro = document.getElementById('form-registro');
+    const formRegistro = document.querySelector('[data-role="form-registro"]');
     if (formRegistro) {
         formRegistro.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -41,14 +38,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const asientos = document.querySelectorAll('.asiento.libre');
-    const totalPriceAsientos = document.getElementById('total-price');
-    const botonConfirmar = document.getElementById('confirmar-btn');
+    // ========== ASIENTOS ==========
+    // Los asientos ya usan clases de estado (.libre / .seleccionado) en el HTML/CSS del proyecto
+    const asientos = document.querySelectorAll('[data-role="asiento"].libre, .asiento.libre');
+    const totalPriceAsientos = document.querySelector('[data-role="total-price"]');
+    const botonConfirmar = document.querySelector('[data-action="confirmar-asientos"]');
 
     if (asientos.length > 0 && botonConfirmar) {
         function calcularTotalAsientos() {
             let total = 0;
-            document.querySelectorAll('.asiento.seleccionado').forEach(asiento => {
+            document.querySelectorAll('.asiento.seleccionado, [data-role="asiento"].seleccionado').forEach(asiento => {
                 total += parseInt(asiento.getAttribute('data-price')) || 0;
             });
             if (totalPriceAsientos) {
@@ -64,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         botonConfirmar.addEventListener('click', () => {
-            const seleccionados = document.querySelectorAll('.asiento.seleccionado');
+            const seleccionados = document.querySelectorAll('.asiento.seleccionado, [data-role="asiento"].seleccionado');
             if (seleccionados.length === 0) {
                 alert('Por favor, elegí al menos un asiento antes de continuar.');
                 return;
@@ -78,10 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
-    const candyForm = document.getElementById('candy-form');
-    const listaCombos = document.getElementById('lista-combos');
-    const contenedorCombos = document.querySelector('.candy-shop-container') || listaCombos;
+    const candyForm = document.querySelector('[data-role="candy-form"]');
+    const listaCombos = document.querySelector('[data-role="lista-combos"]');
+    const contenedorCombos = document.querySelector('[data-role="candy-shop"]') || listaCombos;
 
     if (candyForm || contenedorCombos) {
 
@@ -108,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const destino = listaCombos || candyForm;
             if (!destino) return;
 
-            destino.querySelectorAll('.product-combo').forEach(el => el.remove());
+            destino.querySelectorAll('[data-role="product-combo"]').forEach(el => el.remove());
 
             combos.forEach(combo => {
                 const nombre = combo.titulo || combo.nombre || 'Combo';
@@ -125,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const div = document.createElement('div');
                 div.className = 'product-combo';
+                div.setAttribute('data-role', 'product-combo');
                 div.setAttribute('data-name', nombre);
                 div.setAttribute('data-price', precio);
 
@@ -138,12 +137,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <div class="quantity-controls">
-                        <input type="number" class="quantity-input"
+                        <input type="number" data-role="quantity-input" class="quantity-input"
                                data-id="${combo.id ?? ''}" value="0" min="0">
                     </div>
                 `;
 
-                const cupon = destino.querySelector('.cupon-container');
+                const cupon = destino.querySelector('[data-role="cupon-container"]');
                 if (cupon) {
                     destino.insertBefore(div, cupon);
                 } else {
@@ -151,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            document.querySelectorAll('.quantity-input').forEach(input => {
+            document.querySelectorAll('[data-role="quantity-input"]').forEach(input => {
                 input.addEventListener('input', calcularTotalCombos);
                 input.addEventListener('change', calcularTotalCombos);
             });
@@ -167,15 +166,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function calcularTotalCombos() {
-            const totalPriceEl = document.getElementById('total-price');
+            const totalPriceEl = document.querySelector('[data-role="total-price"]');
             if (!totalPriceEl) return;
 
             const totalAsientos = getCantidadAsientos() * PRECIO_ASIENTO;
 
             let totalCombos = 0;
-            document.querySelectorAll('.product-combo').forEach(combo => {
+            document.querySelectorAll('[data-role="product-combo"]').forEach(combo => {
                 const precio = parseInt(combo.getAttribute('data-price')) || 0;
-                const input = combo.querySelector('.quantity-input');
+                const input = combo.querySelector('[data-role="quantity-input"]');
                 const cantidad = input ? (parseInt(input.value) || 0) : 0;
                 totalCombos += precio * cantidad;
             });
@@ -189,8 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function validarCupon() {
-            const cuponInput = document.getElementById('cupon-input');
-            const mensajeEl = document.getElementById('mensaje-cupon');
+            const cuponInput = document.querySelector('[data-role="cupon-input"]');
+            const mensajeEl = document.querySelector('[data-role="mensaje-cupon"]');
             if (!cuponInput || !mensajeEl) return;
 
             const codigo = cuponInput.value.trim().toUpperCase();
@@ -215,12 +214,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function irAPagar(incluirCombos = true) {
             const params = new URLSearchParams(window.location.search);
-            const totalPriceEl = document.getElementById('total-price');
+            const totalPriceEl = document.querySelector('[data-role="total-price"]');
 
             if (incluirCombos) {
                 const combosElegidos = [];
-                document.querySelectorAll('.product-combo').forEach(combo => {
-                    const input = combo.querySelector('.quantity-input');
+                document.querySelectorAll('[data-role="product-combo"]').forEach(combo => {
+                    const input = combo.querySelector('[data-role="quantity-input"]');
                     const cant = input ? (parseInt(input.value) || 0) : 0;
                     if (cant > 0) {
                         const nombre = combo.getAttribute('data-name') || 'Combo';
@@ -244,10 +243,10 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'comprar.html?' + params.toString();
         }
 
-        const btnCupon = document.getElementById('btn-cupon');
+        const btnCupon = document.querySelector('[data-action="aplicar-cupon"]');
         if (btnCupon) btnCupon.addEventListener('click', validarCupon);
 
-        const btnConfirmarCombos = document.getElementById('btn-confirmar');
+        const btnConfirmarCombos = document.querySelector('[data-action="confirmar-combos"]');
         if (btnConfirmarCombos) {
             btnConfirmarCombos.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -262,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        const btnOmitir = document.getElementById('btn-omitir');
+        const btnOmitir = document.querySelector('[data-action="omitir-combos"]');
         if (btnOmitir) {
             btnOmitir.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -273,8 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cargarCombos();
     }
 
-
-    const formCompra = document.getElementById('compra-form');
+    const formCompra = document.querySelector('[data-role="compra-form"]');
 
     if (formCompra) {
         const TITULOS_PELICULAS = {
@@ -298,18 +296,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const combos = params.get('combos');
         const total = params.get('total');
 
-        const peliEl = document.getElementById('peli-sel');
+        const peliEl = document.querySelector('[data-role="peli-sel"]');
         if (peliEl) {
             peliEl.textContent = TITULOS_PELICULAS[peliSlug] || 'Película seleccionada';
         }
 
-        const horaEl = document.getElementById('hora-sel');
+        const horaEl = document.querySelector('[data-role="hora-sel"]');
         if (horaEl) horaEl.textContent = hora;
 
-        const salaEl = document.getElementById('sala-sel');
+        const salaEl = document.querySelector('[data-role="sala-sel"]');
         if (salaEl) salaEl.textContent = sala;
 
-        const asientosEl = document.getElementById('asientos-sel');
+        const asientosEl = document.querySelector('[data-role="asientos-sel"]');
         if (asientosEl) {
             asientosEl.textContent = asientosParam
                 ? asientosParam.split(',').join(', ')
@@ -317,26 +315,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (combos) {
-            const combosWrap = document.getElementById('combos-sel-wrap');
-            const combosEl = document.getElementById('combos-sel');
+            const combosWrap = document.querySelector('[data-role="combos-sel-wrap"]');
+            const combosEl = document.querySelector('[data-role="combos-sel"]');
             if (combosWrap && combosEl) {
                 combosEl.textContent = combos;
                 combosWrap.style.display = 'block';
+            } else if (combosEl) {
+                combosEl.textContent = combos;
             }
         }
 
-        const totalEl = document.getElementById('total-sel');
+        const totalEl = document.querySelector('[data-role="total-sel"]');
         if (totalEl) {
             const numero = total ? (parseInt(total.replace(/\D/g, '')) || 0) : 0;
             totalEl.textContent = '$' + numero.toLocaleString('es-AR');
         }
 
-        const formSection = document.getElementById('form-section');
-        const successSection = document.getElementById('success-section');
+        const formSection = document.querySelector('[data-role="form-section"]');
+        const successSection = document.querySelector('[data-role="success-section"]');
 
         function mostrarExito() {
             const codigoRandom = 'CL-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-            const codigoEl = document.getElementById('codigo-reserva');
+            const codigoEl = document.querySelector('[data-role="codigo-reserva"]');
             if (codigoEl) codigoEl.textContent = codigoRandom;
 
             if (formSection) formSection.style.display = 'none';
@@ -349,13 +349,20 @@ document.addEventListener('DOMContentLoaded', () => {
         formCompra.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            const nombreEl = document.querySelector('[data-role="campo-nombre"]');
+            const emailEl = document.querySelector('[data-role="campo-email"]');
+            const direccionEl = document.querySelector('[data-role="campo-direccion"]');
+            const telefonoEl = document.querySelector('[data-role="campo-telefono"]');
+            const pagoEl = document.querySelector('[data-role="campo-pago"]');
+            const totalSelEl = document.querySelector('[data-role="total-sel"]');
+
             const datosOrden = {
-                nombre: document.getElementById('nombre').value,
-                email: document.getElementById('email').value,
-                direccion: document.getElementById('direccion').value,
-                telefono: document.getElementById('telefono').value,
-                pago: document.getElementById('pago').value,
-                total: document.getElementById('total-sel')?.textContent || '$0',
+                nombre: nombreEl ? nombreEl.value : '',
+                email: emailEl ? emailEl.value : '',
+                direccion: direccionEl ? direccionEl.value : '',
+                telefono: telefonoEl ? telefonoEl.value : '',
+                pago: pagoEl ? pagoEl.value : '',
+                total: totalSelEl ? totalSelEl.textContent : '$0',
                 fecha: new Date().toISOString()
             };
 
@@ -374,10 +381,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
-    const selectorMetricas = document.getElementById('selector-metricas');
-    const btnActualizarMetricas = document.getElementById('btn-actualizar-metricas');
-    const resultadoMetricas = document.getElementById('resultado-metricas');
+    const selectorMetricas = document.querySelector('[data-role="selector-metricas"]');
+    const btnActualizarMetricas = document.querySelector('[data-action="actualizar-metricas"]');
+    const resultadoMetricas = document.querySelector('[data-role="resultado-metricas"]');
 
     if (selectorMetricas && resultadoMetricas) {
 
