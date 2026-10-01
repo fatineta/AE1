@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cinema Lights - Inicio</title>
+    <title>Cinema Lights - Combos</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -16,31 +16,29 @@
             <a href="listado_tabla.html">Vista Tabla</a>
             <a href="listado_box.html" class="active">Vista Tarjetas</a>
             <a href="metricas.html" class="active">Métricas</a>
-            <a href="login.html" class="btn-login"title="Registrate para objeter cupones de descuentos">Login</a>
+            <a href="login.html" class="btn-login" title="Registrate para obtener cupones de descuentos">Login</a>
         </div>
     </nav>
 
-    <main class="candy-shop-container">
+    <main class="candy-shop-container" data-role="candy-shop">
         <h1 style="color: #cc0000; font-size: 2rem; margin-bottom: 2px;">Combos</h1>
         <p style="margin-top: 0; color: #555;">Añade combos a tu carrito</p>
-        
-        
-        <div id="lista-combos"></div>
 
-       
+        <div data-role="lista-combos"></div>
+
         <div class="cupon-section" style="margin-top: 20px;">
             <label for="cupon-input">¿Tenés un cupón?</label>
-            <input type="text" id="cupon-input" placeholder="Ingresa tu codigo">
-            <button type="button" id="btn-cupon">Aplicar</button>
-            <p id="mensaje-cupon"></p>
-
+            <input type="text" id="cupon-input" data-role="cupon-input" placeholder="Ingresa tu codigo">
+            <button type="button" data-action="aplicar-cupon">Aplicar</button>
+            <p data-role="mensaje-cupon"></p>
         </div>
+
         <div class="checkout-summary">
-            <h2>Total a pagar: <span id="total-price">$0</span></h2>
+            <h2>Total a pagar: <span data-role="total-price">$0</span></h2>
 
             <div class="acciones" style="display: flex; gap: 10px; margin-top: 15px;">
-                <button type="button" id="btn-confirmar" class="bton-submit">Confirmar pedido</button>
-                <button type="button" id="btn-omitir" class="bton-submit";>Omitir</button>
+                <button type="button" data-action="confirmar-combos" class="bton-submit">Confirmar pedido</button>
+                <button type="button" data-action="omitir-combos" class="bton-submit">Omitir</button>
             </div>
         </div>
     </main>
@@ -48,120 +46,7 @@
     <footer class="site-footer">
         © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
     </footer>
-    <!--
-    <script >
-  
-        // ---- CONFIG: ajustá acá la regla real de descuento ----
-        const DESCUENTO_PORCENTAJE = 0.10;
-        const ENTRADAS_MINIMAS_DESCUENTO = 4;
-        const PRECIO_ASIENTO = 4800;
-        // ---------------------------------------------------------
 
-        const inputs = document.querySelectorAll('.quantity-input');
-        const totalPriceEl = document.getElementById('total-price');
-        const candyForm = document.getElementById('candy-form');
-        const btnOmitir = document.getElementById('btn-omitir');
-
-        let descuentoCupon = 0; // 0 = sin descuento, 0.10 = 10%
-
-        // ESCHUCHADORES DE EVENTOS PARA LOS INPUTS DE CANTIDAD DE COMBOS
-        inputs.forEach(input => {
-            input.addEventListener('input', calcularTotal);
-        });
-
-        function validarCupon() {
-            const cuponInput = document.getElementById('cupon-input');
-            const mensajeEl = document.getElementById('mensaje-cupon');
-
-            const codigo = cuponInput.value.trim().toUpperCase();
-
-            // limpia clases anteriores antes de evaluar
-            mensajeEl.classList.remove('mensaje-error', 'mensaje-exito');
-
-            if (codigo === '') {
-                mensajeEl.textContent = 'Por favor, ingrese un código';
-                mensajeEl.classList.add('mensaje-error');
-                descuentoCupon = 0;
-            } else if (codigo === 'UCP10') {
-                mensajeEl.textContent = '¡Cupón aplicado! Tenés un 10% de descuento';
-                mensajeEl.classList.add('mensaje-exito');
-                descuentoCupon = 0.10;
-            } else {
-                mensajeEl.textContent = 'Código inválido o vencido';
-                mensajeEl.classList.add('mensaje-error');
-                descuentoCupon = 0;
-            }
-
-            calcularTotal(); // recalcula el total con (o sin) el descuento
-        }
-
-        document.getElementById('btn-cupon').addEventListener('click', validarCupon);
-
-        // lee cuántos asientos vinieron seleccionados de la página anterior
-        function getCantidadAsientos() {
-            const params = new URLSearchParams(window.location.search);
-            const asientosParam = params.get('asientos');
-            if (!asientosParam) return 0;
-            return asientosParam.split(',').filter(a => a.trim() !== '').length;
-        }
-
-        function calcularTotal() {
-            const cantidadAsientos = getCantidadAsientos();
-            const totalAsientos = cantidadAsientos * PRECIO_ASIENTO;
-
-            let totalCombos = 0;
-            document.querySelectorAll('.product-combo').forEach(combo => {
-                const precio = parseInt(combo.getAttribute('data-price')) || 0;
-                const cantidad = parseInt(combo.querySelector('.quantity-input').value) || 0;
-                totalCombos += precio * cantidad;
-            });
-
-            let total = totalAsientos + totalCombos;
-
-            // aplica el descuento del cupón, si hay uno válido cargado
-            if (descuentoCupon > 0) {
-                total -= total * descuentoCupon;
-            }
-
-            totalPriceEl.textContent = '$' + total.toLocaleString('es-AR');
-        }
-
-        // calcula el total apenas carga la página
-        calcularTotal();
-
-        function irAPagar(incluirCombos = true) {
-            const params = new URLSearchParams(window.location.search);
-
-            if (incluirCombos) {
-                const combosElegidos = [];
-                document.querySelectorAll('.product-combo').forEach(combo => {
-                    const cant = parseInt(combo.querySelector('.quantity-input').value) || 0;
-                    if (cant > 0) {
-                        const nombre = combo.getAttribute('data-name');
-                        combosElegidos.push(`${cant}x ${nombre}`);
-                    }
-                });
-                if (combosElegidos.length > 0) {
-                    params.set('combos', combosElegidos.join(' | '));
-                }
-            }
-
-            // manda también el total final ya calculado, para no recalcularlo en comprar.html
-            params.set('total', totalPriceEl.textContent.replace(/[^\d]/g, ''));
-
-            window.location.href = 'comprar.html?' + params.toString();
-        }
-
-        candyForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            irAPagar(true);
-        });
-
-        btnOmitir.addEventListener('click', () => {
-            irAPagar(false);
-        });
-    </script>
--->
-<script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
