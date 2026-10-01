@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinema Lights - Login</title>
     <link rel="stylesheet" href="style.css">
-    <script src="app.js"></script>
 </head>
 <body>
     <nav class="topnav">
@@ -21,11 +20,11 @@
 
     <div class="login-wrapper">
         <div class="login-card">
-            <div id="login-form">
+            <div data-role="login-panel">
                 <h1>Iniciar sesión</h1>
                 <p class="subtitle">Ingresá con tu cuenta para comprar más rápido</p>
 
-                <form onsubmit="event.preventDefault(); alert('Sesión iniciada (simulación)'); window.location.href='index.html';">
+                <form data-role="form-login">
                     <div class="form-group">
                         <label for="login-email">Correo electrónico</label>
                         <input type="email" id="login-email" name="email" placeholder="tu@email.com" required>
@@ -38,15 +37,15 @@
                 </form>
 
                 <p class="login-toggle">
-                    ¿No tenés cuenta? <a href="#" id="toggle-register">Registrate</a>
+                    ¿No tenés cuenta? <a href="#" data-action="toggle-register">Registrate</a>
                 </p>
             </div>
 
-            <div id="register-form" style="display:none;">
+            <div data-role="register-panel" style="display:none;">
                 <h1>Crear cuenta</h1>
                 <p class="subtitle">Registrate para acceder a la cartelera y comprar entradas</p>
 
-                <form>
+                <form data-role="form-registro">
                     <div class="form-group">
                         <label for="reg-nombre">Nombre completo</label>
                         <input type="text" id="reg-nombre" name="nombre" placeholder="Juan Pérez" required>
@@ -63,7 +62,7 @@
                 </form>
 
                 <p class="login-toggle">
-                    ¿Ya tenés cuenta? <a href="#" id="toggle-login">Iniciá sesión</a>
+                    ¿Ya tenés cuenta? <a href="#" data-action="toggle-login">Iniciá sesión</a>
                 </p>
             </div>
         </div>
@@ -73,6 +72,6 @@
         © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
     </footer>
 
-
+    <script src="app.js"></script>
 </body>
 </html>
