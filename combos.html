@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Lights - Combos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="topnav">
+        <a href="index.html" class="logo">Cinema <span>Lights</span></a>
+        <div class="nav-links">
+            <a href="index.html" data-solo-cliente>Inicio</a>
+            <a href="listado_tabla.html" data-solo-cliente>Vista Tabla</a>
+            <a href="listado_box.html" data-solo-cliente>Vista Tarjetas</a>
+            <a href="mis_compras.html" data-solo-sesion data-solo-cliente class="oculto">Mis compras</a>
+            <a href="metricas.html" data-solo-admin class="oculto">Métricas</a>
+            <span class="nav-usuario oculto" data-solo-sesion>Hola, <strong data-usuario-nombre></strong></span>
+            <a href="login.html" class="btn-login oculto" data-solo-invitado>Iniciar sesión</a>
+            <a href="#" class="btn-login oculto" data-solo-sesion data-accion="logout">Cerrar sesión</a>
+        </div>
+    </nav>
+
+    <main class="candy-shop-container" data-role="candy-shop">
+        <h1 style="color: #cc0000; font-size: 2rem; margin-bottom: 2px;">Combos</h1>
+        <p style="margin-top: 0; color: #555;">Añade combos a tu carrito</p>
+
+        <div data-role="lista-combos"></div>
+
+        <div class="cupon-section" style="margin-top: 20px;">
+            <label for="cupon-input">¿Tenés un cupón?</label>
+            <input type="text" id="cupon-input" data-role="cupon-input" placeholder="Ingresa tu codigo">
+            <button type="button" data-action="aplicar-cupon">Aplicar</button>
+            <p data-role="mensaje-cupon"></p>
+        </div>
+
+        <div class="checkout-summary">
+            <h2>Total a pagar: <span data-role="total-price">$0</span></h2>
+
+            <div class="acciones" style="display: flex; gap: 10px; margin-top: 15px;">
+                <button type="button" data-action="confirmar-combos" class="bton-submit">Confirmar pedido</button>
+                <button type="button" data-action="omitir-combos" class="bton-submit">Omitir</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

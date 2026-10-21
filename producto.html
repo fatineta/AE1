@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinema Lights - Producto</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <nav class="topnav">
         <a href="index.html" class="logo">Cinema <span>Lights</span></a>
         <div class="nav-links">
-            <a href="index.html">Cartelera</a>
-            <a href="login.html" class="btn-login">Login</a>
+            <a href="index.html" data-solo-cliente>Inicio</a>
+            <a href="listado_tabla.html" data-solo-cliente>Vista Tabla</a>
+            <a href="listado_box.html" data-solo-cliente>Vista Tarjetas</a>
+            <a href="mis_compras.html" data-solo-sesion data-solo-cliente class="oculto">Mis compras</a>
+            <a href="metricas.html" data-solo-admin class="oculto">Métricas</a>
+            <span class="nav-usuario oculto" data-solo-sesion>Hola, <strong data-usuario-nombre></strong></span>
+            <a href="login.html" class="btn-login oculto" data-solo-invitado>Iniciar sesión</a>
+            <a href="#" class="btn-login oculto" data-solo-sesion data-accion="logout">Cerrar sesión</a>
         </div>
     </nav>
 
@@ -19,12 +27,12 @@
         <div class="card">
             <div class="detail-layout">
                 <div class="detail-img">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScQNrR9gh7uE6YvrycnCNVmRquyMZaBANtemocyfFdFvQVe2TBHQ1vAJ8D&s=10" 
-                         alt="Spider-Man: Brand New Day">
+                    <img src="https://sm.ign.com/ign_es/image/n/new-spider/new-spider-man-brand-new-day-posters-released_eca9.jpg"
+                        alt="Spider-Man: Brand New Day">
                 </div>
                 <div class="detail-info">
                     <h1>Spider-Man: Brand New Day</h1>
-                    
+
                     <div class="detail-meta">
                         <span class="badge">+13</span>
                         <span class="badge">Acción / Fantasía</span>
@@ -33,9 +41,9 @@
                     </div>
 
                     <p class="detail-desc">
-                        A medida que las exigencias a las que se ve sometido Spider-Man se intensifican, 
-                        la presión desencadena una sorprendente evolución física que pone en peligro su existencia. 
-                        Al mismo tiempo, una nueva y extraña ola de delitos da lugar a una de las amenazas 
+                        A medida que las exigencias a las que se ve sometido Spider-Man se intensifican,
+                        la presión desencadena una sorprendente evolución física que pone en peligro su existencia.
+                        Al mismo tiempo, una nueva y extraña ola de delitos da lugar a una de las amenazas
                         más poderosas a las que se ha enfrentado jamás.
                     </p>
 
@@ -59,9 +67,6 @@
                         </a>
                     </div>
 
-                    <p style="font-size:13px; color:#94a3b8;">
-                        Al seleccionar una función serás dirigido al proceso de compra (asientos + combos + pago).
-                    </p>
                 </div>
             </div>
         </div>
@@ -70,5 +75,8 @@
     <footer class="site-footer">
         © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
     </footer>
+
+    <script src="app.js"></script>
 </body>
+
 </html>
