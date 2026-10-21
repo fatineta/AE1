@@ -1,0 +1,24 @@
+{
+  "entradas": [
+    { "pelicula": "Spider-Man: Brand New Day", "cantidad": 42, "precio": 4800 },
+    { "pelicula": "Wicked", "cantidad": 35, "precio": 4800 },
+    { "pelicula": "Avatar 3", "cantidad": 58, "precio": 4800 },
+    { "pelicula": "The Batman - Part II", "cantidad": 27, "precio": 4800 },
+    { "pelicula": "Chainsaw Man: Reze Arc", "cantidad": 19, "precio": 4800 }
+  ],
+  "combos": [
+    { "nombre": "Combo Balde", "cantidad": 31, "precio": 16000 },
+    { "nombre": "Combo Pareja", "cantidad": 22, "precio": 21000 },
+    { "nombre": "Combo Familia", "cantidad": 14, "precio": 35000 },
+    { "nombre": "Combo Nachos", "cantidad": 18, "precio": 14000 }
+  ],
+  "visitas": [
+    { "dia": "Lunes", "cantidad": 120 },
+    { "dia": "Martes", "cantidad": 95 },
+    { "dia": "Miércoles", "cantidad": 110 },
+    { "dia": "Jueves", "cantidad": 140 },
+    { "dia": "Viernes", "cantidad": 210 },
+    { "dia": "Sábado", "cantidad": 280 },
+    { "dia": "Domingo", "cantidad": 250 }
+  ]
+}
