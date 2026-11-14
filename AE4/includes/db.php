@@ -3,7 +3,7 @@
 $host = 'localhost';
 $db   = 'CINE_DB';
 $user = 'root';
-$pass = '18.05.46.711.314.05';
+$pass = '';
 
 // H8: si existe includes/config.local.php (no versionado, ver config.local.example.php) se usan esos datos
 $configLocal = __DIR__ . '/config.local.php';
