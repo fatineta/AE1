@@ -1,0 +1,13 @@
+{
+  "entradas": [],
+  "combos": [],
+  "visitas": [
+    { "dia": "Lunes", "cantidad": 0 },
+    { "dia": "Martes", "cantidad": 0 },
+    { "dia": "Miércoles", "cantidad": 0 },
+    { "dia": "Jueves", "cantidad": 0 },
+    { "dia": "Viernes", "cantidad": 0 },
+    { "dia": "Sábado", "cantidad": 0 },
+    { "dia": "Domingo", "cantidad": 0 }
+  ]
+}
