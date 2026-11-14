@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cinema Lights - Comprar</title>
+  <link rel="stylesheet" href="style.css?v=20261105-hamburger-1400">
+  <style>
+    /* Butacas no disponibles (ocupadas o reservadas) */
+    .asiento.ocupado { background: #555; color: #999; cursor: not-allowed; opacity: .6; }
+  </style>
+</head>
+
+
+<body>
+  <nav class="topnav">
+    <button type="button" class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-principal">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="index.html" class="logo">Cinema <span>Lights</span></a>
+    <div class="nav-links" id="menu-principal">
+      <a href="index.html" data-solo-cliente>Inicio</a>
+      <a href="listado_tabla.html" data-solo-cliente>Vista Tabla</a>
+      <a href="listado_box.html" data-solo-cliente>Vista Tarjetas</a>
+      <a href="mis_compras.html" data-solo-sesion data-solo-cliente class="oculto">Mis compras</a>
+      <a href="metricas.html" data-solo-admin class="oculto">Métricas</a>
+      <span class="nav-usuario oculto" data-solo-sesion>Hola, <strong data-usuario-nombre></strong></span>
+      <a href="login.html" class="btn-login oculto" data-solo-invitado>Iniciar sesión</a>
+      <a href="#" class="btn-login oculto" data-solo-sesion data-accion="logout">Cerrar sesión</a>
+
+    </div>
+  </nav>
+  <h1 style="text-align:center; margin-top: 20px; color: aliceblue;">Elegí tu asiento</h1>
+  <p data-role="info-funcion" style="text-align:center; color: aliceblue; margin-top: 4px;"></p>
+
+  <div class="cine-conteiner">
+    <div class="pantalla">
+      <div class="pantalla">PANTALLA</div>
+    </div>
+    <!-- Las butacas se dibujan desde api/asientos.php (según la sala y la función elegidas) -->
+    <div class="asientos-grid" data-role="asientos-grid">
+      <p class="placeholder">Cargando butacas...</p>
+    </div>
+
+    <div class="checkout-summary">
+      <h2> Total a pagar: <span id="total-price" data-role="total-price">$0</span> </h2>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top: 30px; margin-bottom: 30px;">
+    <button id="confirmar-btn" data-action="confirmar-asientos" class="bton-submit">Confirmar selección</button>
+  </div>
+  <footer class="site-footer" style="padding-top: 20px; margin-top: 70px;">
+    © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
+  </footer>
+
+  <script src="app.js?v=20261105-hamburger-1400"></script>
+</body>
+
+</html>

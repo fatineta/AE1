@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Lights - Producto</title>
+    <link rel="stylesheet" href="style.css?v=20261105-hamburger-1400">
+</head>
+
+<body>
+    <nav class="topnav">
+        <button type="button" class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-principal">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="index.html" class="logo">Cinema <span>Lights</span></a>
+        <div class="nav-links" id="menu-principal">
+            <a href="index.html" data-solo-cliente>Inicio</a>
+            <a href="listado_tabla.html" data-solo-cliente>Vista Tabla</a>
+            <a href="listado_box.html" data-solo-cliente>Vista Tarjetas</a>
+            <a href="mis_compras.html" data-solo-sesion data-solo-cliente class="oculto">Mis compras</a>
+            <a href="metricas.html" data-solo-admin class="oculto">Métricas</a>
+            <span class="nav-usuario oculto" data-solo-sesion>Hola, <strong data-usuario-nombre></strong></span>
+            <a href="login.html" class="btn-login oculto" data-solo-invitado>Iniciar sesión</a>
+            <a href="#" class="btn-login oculto" data-solo-sesion data-accion="logout">Cerrar sesión</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="card">
+            <div class="detail-layout">
+                <div class="detail-img">
+                    <img data-role="detalle-img" src="" alt="">
+                </div>
+                <div class="detail-info">
+                    <h1 data-role="detalle-titulo">Cargando...</h1>
+
+                    <div class="detail-meta" data-role="detalle-badges"></div>
+
+                    <p class="detail-desc" data-role="detalle-desc"></p>
+
+                    <h3>Elegí tu función</h3>
+                    <!-- Horarios de ejemplo: todavia no vienen de la base de datos.
+                         app.js solo corrige el ?peli= de cada link para que apunte
+                         a la pelicula que se esta mostrando. -->
+                    <div class="showtimes" data-role="detalle-showtimes">
+                        <a href="asientos.html?peli=spiderman&hora=16:00&sala=1" class="showtime-btn">
+                            <span class="time">16:00</span>
+                            <span class="sala">Sala 1 · 2D</span>
+                        </a>
+                        <a href="asientos.html?peli=spiderman&hora=18:30&sala=2" class="showtime-btn">
+                            <span class="time">18:30</span>
+                            <span class="sala">Sala 2 · 3D</span>
+                        </a>
+                        <a href="asientos.html?peli=spiderman&hora=21:00&sala=1" class="showtime-btn">
+                            <span class="time">21:00</span>
+                            <span class="sala">Sala 1 · 2D</span>
+                        </a>
+                        <a href="asientos.html?peli=spiderman&hora=23:30&sala=3" class="showtime-btn">
+                            <span class="time">23:30</span>
+                            <span class="sala">Sala 3 · 2D</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
+    </footer>
+
+    <script src="app.js?v=20261105-hamburger-1400"></script>
+</body>
+
+</html>
