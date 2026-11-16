@@ -1,11 +1,14 @@
 <?php
-require_once __DIR__ . '/../includes/sesion.php';
-header('Content-Type: application/json');
+// api/asientos.php
+// Endpoint PÚBLICO: cualquiera puede ver las butacas de una función.
+// No requiere sesión, por eso NO incluye sesion.php.
+
+header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');   // el estado de las butacas cambia: nunca se cachea
 
-require_once '../includes/db.php';
+require_once __DIR__ . '/../config/conexion.php';
 
-$id = (int)($_GET['funcion'] ?? 0);
+$id = (int) ($_GET['funcion'] ?? 0);
 if ($id <= 0) {
     http_response_code(400);
     echo json_encode(["error" => "Función inválida."]);
@@ -13,6 +16,8 @@ if ($id <= 0) {
 }
 
 try {
+    $pdo = Conexion::getInstance();
+
     $stmt = $pdo->prepare(
         "SELECT i.id_itinerario, i.fecha, i.horario_inicio, p.titulo, s.nombre_sala
          FROM Itinerario i
@@ -45,13 +50,13 @@ try {
         return [
             "numero" => $r['numero_asiento'],
             "estado" => $r['estado'],            // disponible | reservado | ocupado
-            "precio" => (float)$r['precio']
+            "precio" => (float) $r['precio']
         ];
     }, $stmt->fetchAll(PDO::FETCH_ASSOC));
 
     echo json_encode([
         "funcion" => [
-            "id_itinerario" => (int)$f['id_itinerario'],
+            "id_itinerario" => (int) $f['id_itinerario'],
             "pelicula"      => $f['titulo'],
             "fecha"         => $f['fecha'],
             "hora"          => $f['horario_inicio'],
@@ -59,8 +64,8 @@ try {
         ],
         "asientos" => $asientos
     ]);
-
 } catch (PDOException $e) {
+    error_log('asientos.php: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode(["error" => "Error interno en el servidor."]);
 }
