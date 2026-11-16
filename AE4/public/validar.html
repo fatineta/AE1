@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Validá el código QR de tu reserva en Cinema Lights y consultá el estado de tu entrada.">
+    <title>Cinema Lights - Validar QR</title>
+    <link rel="stylesheet" href="style.css?v=20261105-hamburger-1400">
+</head>
+
+<body>
+    <nav class="topnav">
+        <button type="button" class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-principal">
+            <span></span><span></span><span></span>
+        </button>
+        <a href="index.html" class="logo">Cinema <span>Lights</span></a>
+        <div class="nav-links" id="menu-principal">
+            <a href="index.html">Inicio</a>
+            <a href="metricas.html" data-solo-admin class="oculto">Métricas</a>
+            <a href="validar.html" data-solo-admin class="oculto">Validar QR</a>
+            <span class="nav-usuario oculto" data-solo-sesion>Hola, <strong data-usuario-nombre></strong></span>
+            <a href="login.html" class="btn-login oculto" data-solo-invitado>Iniciar sesión</a>
+            <a href="#" class="btn-login oculto" data-solo-sesion data-accion="logout">Cerrar sesión</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="card">
+            <h1>Validar QR de reserva</h1>
+            <p class="subtitle" data-role="validar-subtitulo">Escaneá el QR con la cámara del celular: te lleva directo a esta página.
+                También podés pegar el enlace o el texto del QR. Se valida contra la base de datos.</p>
+
+            <form data-role="validar-form">
+                <div class="form-group">
+                    <label for="texto-qr">Enlace o texto del QR</label>
+                    <textarea id="texto-qr" data-role="validar-texto" rows="5" required
+                        placeholder="http://.../validar.html?r=CL-00013&amp;f=..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Validar</button>
+            </form>
+
+            <div data-role="validar-resultado" style="margin-top:20px;" aria-live="polite"></div>
+            <button type="button" data-action="canjear-ticket" class="btn-submit"
+                style="display:none; width:auto; padding:10px 24px; margin-top:8px;">Marcar como utilizado</button>
+            <p><a href="validar.html" data-role="validar-otro" style="display:none;">Validar otro QR</a></p>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
+    </footer>
+
+    <script src="app.js?v=20261105-hamburger-1400"></script>
+</body>
+
+</html>
