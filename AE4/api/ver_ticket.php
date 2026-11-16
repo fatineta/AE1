@@ -4,9 +4,9 @@
 //        así que nadie puede consultar un ticket ajeno adivinando códigos.
 // POST api/ver_ticket.php  {"r":"CL-00034","f":"..."}  -> marca el ticket como "utilizado".
 //        Solo administradores logueados.
-require_once __DIR__ . '/../includes/sesion.php';
-require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/../includes/qr.php';
+require_once __DIR__ . '/../config/sesion.php';
+require_once __DIR__ . '/../config/conexion.php';
+require_once __DIR__ . '/../models/QrModel.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
@@ -18,6 +18,8 @@ function responder(int $codigo, array $cuerpo): void
     echo json_encode($cuerpo);
     exit;
 }
+
+$pdo = Conexion::getInstance();
 
 $esAdmin = (($_SESSION['usuario_rol'] ?? '') === 'administrador');
 $metodo  = $_SERVER['REQUEST_METHOD'];
@@ -37,18 +39,22 @@ if ($metodo === 'POST') {
 }
 
 // La firma se comprueba ANTES de tocar la base. Mismo mensaje si es inválida o no existe.
-$id = qr_id_desde_codigo($r);
-if (!$id || !preg_match('/^[0-9a-f]{20}$/i', $f) || !qr_firma_valida($id, $f)) {
+$id = QrModel::idDesdeCodigo($r);
+if (!$id || !preg_match('/^[0-9a-f]{20}$/i', $f) || !QrModel::firmaValida($id, $f)) {
     responder(404, ["error" => "QR inválido o alterado."]);
 }
 
 try {
-    $d = qr_datos_ticket($pdo, $id);
+    $d = QrModel::datosTicket($pdo, $id);
     if (!$d) {
         responder(404, ["error" => "QR inválido o alterado."]);
     }
 
     if ($metodo === 'POST') {
+        // 401 si NO hay sesión (anónimo), 403 si hay sesión pero no es admin
+        if (!isset($_SESSION['usuario_id'])) {
+            responder(401, ["error" => "No autenticado."]);
+        }
         if (!$esAdmin) {
             responder(403, ["error" => "Solo el personal puede marcar una entrada como utilizada."]);
         }
@@ -70,17 +76,17 @@ try {
 
     // GET: solo lo necesario para mostrar la entrada (sin datos del cliente)
     echo json_encode([
-        "codigo"         => $d['codigo'],
-        "estado"         => $d['estado'],
-        "pelicula"       => $d['pelicula'],
-        "fecha"          => $d['fecha'],
-        "hora"           => substr((string) $d['hora'], 0, 5),
-        "sala"           => $d['sala'],
-        "butacas"        => $d['butacas'],
-        "combos"         => $d['combos'],
-        "total"          => $d['total'],
-        "es_hoy"         => ($d['fecha'] === date('Y-m-d')),
-        "puede_canjear"  => ($esAdmin && $d['estado'] === 'confirmado')
+        "codigo"        => $d['codigo'],
+        "estado"        => $d['estado'],
+        "pelicula"      => $d['pelicula'],
+        "fecha"         => $d['fecha'],
+        "hora"          => substr((string) $d['hora'], 0, 5),
+        "sala"          => $d['sala'],
+        "butacas"       => $d['butacas'],
+        "combos"        => $d['combos'],
+        "total"         => $d['total'],
+        "es_hoy"        => ($d['fecha'] === date('Y-m-d')),
+        "puede_canjear" => ($esAdmin && $d['estado'] === 'confirmado')
     ]);
 } catch (PDOException $e) {
     error_log('ver_ticket.php: ' . $e->getMessage());
