@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinema Lights - Producto</title>
     <meta name="description" content="Detalle de la película y funciones disponibles en Cinema Lights.">
-    <link rel="stylesheet" href="style.css?v=20261105-hamburger-1400">
-</head>
+<link rel="stylesheet" href="css/style.css"></head>
 
 <body>
     <nav class="topnav">
@@ -40,11 +39,12 @@
 
                     <p class="detail-desc" data-role="detalle-desc"></p>
 
-                    <h3>Elegí tu función</h3>
+                    <h2>Elegí tu función</h2>
                     <!-- Horarios de ejemplo: todavia no vienen de la base de datos.
                          app.js solo corrige el ?peli= de cada link para que apunte
                          a la pelicula que se esta mostrando. -->
-<div class="showtimes" data-role="detalle-showtimes" aria-live="polite">                        <a href="asientos.html?peli=spiderman&hora=16:00&sala=1" class="showtime-btn">
+                    <div class="showtimes" data-role="detalle-showtimes" aria-live="polite">
+                        <a href="asientos.html?peli=spiderman&hora=16:00&sala=1" class="showtime-btn">
                             <span class="time">16:00</span>
                             <span class="sala">Sala 1 · 2D</span>
                         </a>
@@ -71,7 +71,6 @@
         © 2026 - Cinema Lights Posadas · Universidad de la Cuenca del Plata · Paradigmas III
     </footer>
 
-    <script src="app.js?v=20261105-hamburger-1400"></script>
-</body>
+<script src="js/app.js"></script></body>
 
 </html>
