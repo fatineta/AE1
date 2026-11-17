@@ -8,7 +8,8 @@
 //
 // Uso: php actualizar_peliculas.php   (o abrirlo en el navegador apuntando a esta ruta)
 
-require __DIR__ . '/includes/db.php';   // deja $pdo listo, con la config de includes/config.local.php
+require_once __DIR__ . '/config/conexion.php';
+$pdo = Conexion::getInstance();
 require __DIR__ . '/includes/tmdb.php'; // clase TmdbService
 
 header('Content-Type: text/plain; charset=utf-8');
