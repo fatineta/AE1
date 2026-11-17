@@ -1,8 +1,6 @@
 <?php
-require_once __DIR__ . '/../config/conexion.php';
-require_once __DIR__ . '/../models/UsuarioModel.php';
-
-header('Content-Type: application/json; charset=utf-8');
+header('Content-Type: application/json');
+require_once '../includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -39,24 +37,25 @@ if (strlen($password) < 8) {
 $hash = password_hash($password, PASSWORD_BCRYPT);
 
 try {
-    $pdo = Conexion::getInstance();
-    $usuarioModel = new UsuarioModel($pdo);
-
-    // El rol NUNCA viene del cliente: UsuarioModel::crear() fija 'cliente'
-    $idCliente = $usuarioModel->crear($nombre, $email, $hash);
+    // El rol NUNCA viene del cliente: todo registro público es 'cliente'
+    $stmt = $pdo->prepare(
+        "INSERT INTO Cliente (nombre, email, contrasena, rol)
+         VALUES (:nombre, :email, :contrasena, 'cliente')"
+    );
+    $stmt->execute([
+        'nombre'     => $nombre,
+        'email'      => $email,
+        'contrasena' => $hash,
+    ]);
 
     http_response_code(201);
-    echo json_encode([
-        "success" => true,
-        "id"      => $idCliente,
-        "mensaje" => "Registro exitoso. Ya puedes iniciar sesión."
-    ]);
+    echo json_encode(["success" => true, "mensaje" => "Registro exitoso. Ya puedes iniciar sesión."]);
+
 } catch (PDOException $e) {
     if (($e->errorInfo[1] ?? 0) == 1062) { // UNIQUE uq_cliente_email
         http_response_code(409);
         echo json_encode(["error" => "Ese email ya está registrado."]);
     } else {
-        error_log('registro.php: ' . $e->getMessage());
         http_response_code(500);
         echo json_encode(["error" => "Error interno en el servidor."]);
     }
