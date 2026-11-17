@@ -1,6 +1,9 @@
 <?php
-require_once __DIR__ . '/../includes/sesion.php';
-header('Content-Type: application/json');
+// api/logout.php
+// Destruye la sesión actual. No es un recurso protegido: cualquiera puede pedir logout.
+require_once __DIR__ . '/../config/sesion.php';
+
+header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
