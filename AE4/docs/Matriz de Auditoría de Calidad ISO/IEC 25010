@@ -1,0 +1,9 @@
+| # | Característica ISO 25010 | Evidencia técnica a verificar en el código | Estado |
+|---|--------------------------|--------------------------------------------|:------:|
+| 1 | **Adecuación funcional** | Operaciones CRUD procesadas en PHP que respaldan los casos de uso principales de AE1 y persisten en MySQL vía PDO. |  Cumple |
+| 2 | **Eficiencia de desempeño** | Respuestas asíncronas livianas en JSON, sin recargas totales ni latencias desmedidas. |  Cumple |
+| 3 | **Compatibilidad** | Arquitectura desacoplada cliente-servidor (frontend JS Vanilla / API RESTful PHP). |  Cumple |
+| 4 | **Fiabilidad** | Bloques `try/catch` que capturan excepciones PDO y emiten códigos HTTP semánticos. |  Cumple |
+| 5 | **Seguridad (OWASP)** | Contraseñas con BCRYPT, PDO Prepared Statements y control de sesión con `$_SESSION`. |  Cumple |
+| 6 | **Usabilidad / Accesibilidad** | Auditoría Lighthouse 100/100, navegación por teclado (`:focus-visible`) y regiones `aria-live`. |  Cumple |
+| 7 | **Mantenibilidad** | Código estructurado en capas limpias (MVC), nombres expresivos y versionado en Git. |  Cumple |
