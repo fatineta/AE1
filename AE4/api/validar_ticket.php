@@ -1,14 +1,10 @@
 <?php
-// Valida un QR. La máquina (o el personal) manda SOLO el código de reserva y la firma;
-// el pedido que se devuelve sale de la base de datos, nunca del texto del QR.
-//   GET  ?codigo=CL-00013&firma=...                 -> valida y devuelve el pedido
-//   POST {"codigo":"...","firma":"...","accion":"canjear"}  -> marca el ticket como utilizado (solo administradores)
-require_once __DIR__ . '/../includes/sesion.php';
-header('Content-Type: application/json');
-header('Cache-Control: no-store');
+require_once __DIR__ . '/../config/sesion.php';
+require_once __DIR__ . '/../config/conexion.php';
+require_once __DIR__ . '/../models/QrModel.php';
 
-require_once '../includes/db.php';
-require_once __DIR__ . '/../includes/qr.php';
+header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store');
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 if ($metodo !== 'GET' && $metodo !== 'POST') {
@@ -17,22 +13,20 @@ if ($metodo !== 'GET' && $metodo !== 'POST') {
     exit;
 }
 
-$entrada = $metodo === 'POST'
-    ? (json_decode(file_get_contents('php://input'), true) ?? [])
-    : $_GET;
+$entrada = $metodo === 'POST' ? (json_decode(file_get_contents('php://input'), true) ?? []) : $_GET;
 $codigo = (string) ($entrada['codigo'] ?? '');
 $firma  = (string) ($entrada['firma'] ?? '');
 
-// Mismo mensaje para código mal escrito y firma inválida: no se le da pistas a quien prueba códigos
-$idTicket = qr_id_desde_codigo($codigo);
-if ($idTicket === null || !qr_firma_valida($idTicket, $firma)) {
+$idTicket = QrModel::idDesdeCodigo($codigo);
+if ($idTicket === null || !QrModel::firmaValida($idTicket, $firma)) {
     http_response_code(400);
     echo json_encode(["valido" => false, "motivo" => "Código o firma inválidos."]);
     exit;
 }
 
 try {
-    $d = qr_datos_ticket($pdo, $idTicket);
+    $pdo = Conexion::getInstance();
+    $d = QrModel::datosTicket($pdo, $idTicket);
     if (!$d) {
         http_response_code(404);
         echo json_encode(["valido" => false, "motivo" => "El ticket no existe."]);
@@ -40,14 +34,9 @@ try {
     }
 
     $pedido = [
-        "codigo"   => $d['codigo'],
-        "pelicula" => $d['pelicula'],
-        "fecha"    => $d['fecha'],
-        "hora"     => substr((string) $d['hora'], 0, 5),
-        "sala"     => $d['sala'],
-        "butacas"  => $d['butacas'],
-        "combos"   => $d['combos'],
-        "total"    => $d['total']
+        "codigo" => $d['codigo'], "pelicula" => $d['pelicula'], "fecha" => $d['fecha'],
+        "hora" => substr((string) $d['hora'], 0, 5), "sala" => $d['sala'],
+        "butacas" => $d['butacas'], "combos" => $d['combos'], "total" => $d['total']
     ];
 
     if ($metodo === 'POST') {
@@ -67,11 +56,7 @@ try {
             exit;
         }
 
-        // El UPDATE condicional hace que un mismo QR no se pueda canjear dos veces
-        $st = $pdo->prepare(
-            "UPDATE Ticket SET situacion_boleto = 'utilizado'
-             WHERE id_ticket = :id AND situacion_boleto = 'confirmado'"
-        );
+        $st = $pdo->prepare("UPDATE Ticket SET situacion_boleto = 'utilizado' WHERE id_ticket = :id AND situacion_boleto = 'confirmado'");
         $st->execute(['id' => $idTicket]);
         if ($st->rowCount() === 0) {
             http_response_code(409);
@@ -83,20 +68,14 @@ try {
     }
 
     $mensajes = [
-        'confirmado' => null,
-        'utilizado'  => 'Este ticket ya fue utilizado.',
-        'cancelado'  => 'Este ticket fue cancelado.',
-        'pendiente'  => 'Este ticket todavía no está confirmado.'
+        'confirmado' => null, 'utilizado' => 'Este ticket ya fue utilizado.',
+        'cancelado' => 'Este ticket fue cancelado.', 'pendiente' => 'Este ticket todavía no está confirmado.'
     ];
     $aviso = $mensajes[$d['estado']] ?? 'Estado del ticket desconocido.';
-    echo json_encode([
-        "valido" => $aviso === null,
-        "estado" => $d['estado'],
-        "motivo" => $aviso,
-        "pedido" => $pedido
-    ]);
+    echo json_encode(["valido" => $aviso === null, "estado" => $d['estado'], "motivo" => $aviso, "pedido" => $pedido]);
 
 } catch (PDOException $e) {
+    error_log('validar_ticket.php: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode(["valido" => false, "motivo" => "Error interno en el servidor."]);
 }
