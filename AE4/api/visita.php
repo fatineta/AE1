@@ -1,19 +1,18 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
-
+// Suma una visita al contador del día. No devuelve datos ni usa información del visitante.
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     exit;
 }
 
-require_once __DIR__ . '/../config/conexion.php';
+require_once '../includes/db.php';
 
 try {
-    $pdo = Conexion::getInstance();
-    $stmt = $pdo->prepare("INSERT INTO Visita (dia, cantidad) VALUES (CURDATE(), 1) ON DUPLICATE KEY UPDATE cantidad = cantidad + 1");
-    $stmt->execute();
+    $pdo->exec(
+        "INSERT INTO Visita (dia, cantidad) VALUES (CURDATE(), 1)
+         ON DUPLICATE KEY UPDATE cantidad = cantidad + 1"
+    );
     http_response_code(204);
 } catch (PDOException $e) {
-    error_log('visita.php: ' . $e->getMessage());
     http_response_code(500);
 }
