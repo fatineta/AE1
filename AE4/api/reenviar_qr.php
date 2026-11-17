@@ -1,11 +1,7 @@
 <?php
 // Reenvía por correo el QR de un ticket propio (para cuando el primer envío falló).
-require_once __DIR__ . '/../config/sesion.php';
-require_once __DIR__ . '/../config/conexion.php';
-require_once __DIR__ . '/../config/mailer.php';
-require_once __DIR__ . '/../models/QrModel.php';
-
-header('Content-Type: application/json; charset=utf-8');
+require_once __DIR__ . '/../includes/sesion.php';
+header('Content-Type: application/json');
 
 if (!isset($_SESSION['usuario_id'])) {
     http_response_code(401);
@@ -24,9 +20,11 @@ $idCliente = (int) $_SESSION['usuario_id'];
 $emailCliente  = (string) ($_SESSION['usuario_email'] ?? '');
 $nombreCliente = (string) ($_SESSION['usuario_nombre'] ?? '');
 
+require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/mailer.php';
+
 try {
-    $pdo = Conexion::getInstance();
-    $datos = $idTicket > 0 ? QrModel::datosTicket($pdo, $idTicket) : null;
+    $datos = $idTicket > 0 ? qr_datos_ticket($pdo, $idTicket) : null;
 
     // Si el ticket no es del usuario logueado se responde igual que si no existiera
     if (!$datos || $datos['id_cliente'] !== $idCliente) {
@@ -54,7 +52,7 @@ try {
     $_SESSION['qr_reenvio'][$idTicket] = $ahora;
     session_write_close();
 
-    $res = enviar_qr_por_correo($emailCliente, $nombreCliente, $datos, QrModel::texto($datos));
+    $res = enviar_qr_por_correo($emailCliente, $nombreCliente, $datos, qr_texto($datos));
     if ($res['enviado']) {
         echo json_encode(["success" => true, "destino" => $res['destino']]);
     } else {
@@ -65,7 +63,6 @@ try {
         ]);
     }
 } catch (PDOException $e) {
-    error_log('reenviar_qr.php: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode(["error" => "Error interno en el servidor."]);
 }
