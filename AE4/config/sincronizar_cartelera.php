@@ -7,8 +7,9 @@
 // Requiere haber corrido sql/tmdb_cartelera.sql una vez.
 // Uso: php sincronizar_cartelera.php   (o abrir en el navegador, solo desde localhost)
 
-require __DIR__ . '/includes/db.php';
-require __DIR__ . '/includes/tmdb.php';
+// ACÁ ESTABA EL ERROR: tenías '/config/conexion.php'. Debe ser solo 'conexion.php'
+require_once __DIR__ . '/conexion.php';
+require_once __DIR__ . '/tmdb.php';
 
 header('Content-Type: text/plain; charset=utf-8');
 
