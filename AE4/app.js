@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.appendChild(img);
 
             const body = crearEl('div', null, 'card-body');
-            body.appendChild(crearEl('h3', p.titulo));
+            body.appendChild(crearEl('h2', p.titulo));
             body.appendChild(crearEl('p', [p.clasificacion, p.generos].filter(Boolean).join(' · '), 'meta'));
 
             if (funcionesDelDia) {
@@ -523,7 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const fechaElegida = (pedida && disponibles.includes(pedida)) ? pedida : disponibles[0];
                     const d = fechaDesdeISO(fechaElegida);
 
-                    contFunciones.appendChild(crearEl('h4',
+                    contFunciones.appendChild(crearEl('h3',
                         'Funciones del ' + nombreDia(d).toLowerCase() + ' ' + d.getDate() + ' de ' + nombreMes(d).toLowerCase(),
                         'dia-bloque-titulo'));
 
@@ -889,7 +889,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const texto = document.createElement('div');
                 texto.style.flex = '1';
-                texto.appendChild(crearEl('h3', nombre));
+                texto.appendChild(crearEl('h2', nombre));
                 texto.appendChild(crearEl('p', descripcion));
                 texto.appendChild(crearEl('span', '$ ' + precio.toLocaleString('es-AR'), 'price'));
                 info.appendChild(texto);
@@ -898,6 +898,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const controles = crearEl('div', null, 'quantity-controls');
                 const cantidad = document.createElement('input');
                 cantidad.type = 'number';
+                cantidad.setAttribute('aria-label', 'Cantidad de ' + nombre + (descripcion ? ': ' + descripcion : ''));
                 cantidad.setAttribute('data-role', 'quantity-input');
                 cantidad.className = 'quantity-input';
                 cantidad.setAttribute('data-id', combo.id ?? '');
