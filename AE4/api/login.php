@@ -1,9 +1,7 @@
 <?php
-require_once __DIR__ . '/../config/sesion.php';
-header('Content-Type: application/json; charset=utf-8');
-
-require_once __DIR__ . '/../config/conexion.php';
-require_once __DIR__ . '/../models/UsuarioModel.php';
+require_once __DIR__ . '/../includes/sesion.php';
+header('Content-Type: application/json');
+require_once '../includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -12,19 +10,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Límite de intentos fallidos (5 intentos cada 10 minutos por email + IP)
+// H3: límite de intentos fallidos (5 intentos cada 10 minutos por email + IP)
 const MAX_INTENTOS = 5;
 const VENTANA_SEGUNDOS = 600;
 
-function archivo_intentos(string $email): string
-{
+function archivo_intentos(string $email): string {
     $ip = $_SERVER['REMOTE_ADDR'] ?? 'local';
     return sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cinema_login_' . hash('sha256', strtolower($email) . '|' . $ip) . '.json';
 }
-
-function leer_intentos(string $archivo): array
-{
-    $d = is_file($archivo) ? json_decode((string) @file_get_contents($archivo), true) : null;
+function leer_intentos(string $archivo): array {
+    $d = is_file($archivo) ? json_decode((string)@file_get_contents($archivo), true) : null;
     if (!is_array($d) || (time() - ($d['ultimo'] ?? 0)) > VENTANA_SEGUNDOS) {
         return ['cuenta' => 0, 'ultimo' => 0];
     }
@@ -54,10 +49,11 @@ if ($intentos['cuenta'] >= MAX_INTENTOS) {
 }
 
 try {
-    $pdo = Conexion::getInstance();
-    $usuarioModel = new UsuarioModel($pdo);
-
-    $cliente = $usuarioModel->buscarPorEmail($email);
+    $stmt = $pdo->prepare(
+        "SELECT id_cliente, nombre, email, contrasena, rol FROM Cliente WHERE email = :email"
+    );
+    $stmt->execute(['email' => $email]);
+    $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
 
     $passwordOk = password_verify($password, $cliente ? $cliente['contrasena'] : HASH_FALSO);
 
@@ -65,7 +61,7 @@ try {
         @unlink($archivoIntentos);
         session_regenerate_id(true);
 
-        $_SESSION['usuario_id']     = (int) $cliente['id_cliente'];
+        $_SESSION['usuario_id']     = (int)$cliente['id_cliente'];
         $_SESSION['usuario_nombre'] = $cliente['nombre'];
         $_SESSION['usuario_email']  = $cliente['email'];
         $_SESSION['usuario_rol']    = $cliente['rol'];
@@ -85,8 +81,8 @@ try {
         http_response_code(401);
         echo json_encode(["error" => "Credenciales inválidas."]);
     }
+
 } catch (PDOException $e) {
-    error_log('login.php: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode(["error" => "Error interno en el servidor."]);
 }
