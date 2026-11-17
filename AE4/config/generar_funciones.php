@@ -8,8 +8,8 @@
 //      o por consola: php generar_funciones.php 14
 // Es una herramienta para cargar datos de prueba/demo: despues podes editar o borrar
 // funciones a mano en la base.
-
-require __DIR__ . '/includes/db.php';
+require_once __DIR__ . '/config/conexion.php';
+$pdo = Conexion::getInstance();
 
 header('Content-Type: text/plain; charset=utf-8');
 date_default_timezone_set('America/Argentina/Buenos_Aires');
