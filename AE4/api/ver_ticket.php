@@ -1,9 +1,4 @@
 <?php
-// GET  api/ver_ticket.php?r=CL-00034&f=<firma>  -> datos del pedido, leídos de la base.
-//        No pide sesión: el QR es la entrada. Pero la firma tiene que ser válida (HMAC del servidor),
-//        así que nadie puede consultar un ticket ajeno adivinando códigos.
-// POST api/ver_ticket.php  {"r":"CL-00034","f":"..."}  -> marca el ticket como "utilizado".
-//        Solo administradores logueados.
 require_once __DIR__ . '/../config/sesion.php';
 require_once __DIR__ . '/../config/conexion.php';
 require_once __DIR__ . '/../models/QrModel.php';
@@ -19,7 +14,11 @@ function responder(int $codigo, array $cuerpo): void
     exit;
 }
 
-$pdo = Conexion::getInstance();
+try {
+    $pdo = Conexion::getInstance();
+} catch (PDOException $e) {
+    responder(500, ["error" => "Error interno en el servidor."]);
+}
 
 $esAdmin = (($_SESSION['usuario_rol'] ?? '') === 'administrador');
 $metodo  = $_SERVER['REQUEST_METHOD'];
@@ -38,7 +37,7 @@ if ($metodo === 'POST') {
     responder(405, ["error" => "Método no permitido."]);
 }
 
-// La firma se comprueba ANTES de tocar la base. Mismo mensaje si es inválida o no existe.
+// La firma se comprueba ANTES de tocar la base.
 $id = QrModel::idDesdeCodigo($r);
 if (!$id || !preg_match('/^[0-9a-f]{20}$/i', $f) || !QrModel::firmaValida($id, $f)) {
     responder(404, ["error" => "QR inválido o alterado."]);
@@ -51,7 +50,6 @@ try {
     }
 
     if ($metodo === 'POST') {
-        // 401 si NO hay sesión (anónimo), 403 si hay sesión pero no es admin
         if (!isset($_SESSION['usuario_id'])) {
             responder(401, ["error" => "No autenticado."]);
         }
@@ -64,7 +62,6 @@ try {
         if ($d['estado'] !== 'confirmado') {
             responder(409, ["error" => "Solo se puede canjear una entrada confirmada (estado: " . $d['estado'] . ")."]);
         }
-        // Atómico: si dos personas lo intentan a la vez, solo una lo logra
         $st = $pdo->prepare("UPDATE Ticket SET situacion_boleto = 'utilizado'
                              WHERE id_ticket = :id AND situacion_boleto = 'confirmado'");
         $st->execute(['id' => $id]);
@@ -74,7 +71,6 @@ try {
         responder(200, ["success" => true]);
     }
 
-    // GET: solo lo necesario para mostrar la entrada (sin datos del cliente)
     echo json_encode([
         "codigo"        => $d['codigo'],
         "estado"        => $d['estado'],
