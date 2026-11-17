@@ -1,9 +1,6 @@
 <?php
-require_once __DIR__ . '/../config/sesion.php';
-require_once __DIR__ . '/../config/conexion.php';
-require_once __DIR__ . '/../models/QrModel.php';
-
-header('Content-Type: application/json; charset=utf-8');
+require_once __DIR__ . '/../includes/sesion.php';
+header('Content-Type: application/json');
 
 // Guardián de sesión
 if (!isset($_SESSION['usuario_id'])) {
@@ -12,9 +9,10 @@ if (!isset($_SESSION['usuario_id'])) {
     exit;
 }
 
+require_once '../includes/db.php';
+require_once __DIR__ . '/../includes/qr.php';
+
 try {
-    $pdo = Conexion::getInstance();
-    
     // El id sale SIEMPRE de la sesión, nunca de la petición
     $stmt = $pdo->prepare(
         "SELECT t.id_ticket, t.fecha_boleto, t.situacion_boleto, t.medio_de_pago,
@@ -39,8 +37,8 @@ try {
         if (!isset($tickets[$id])) {
             $tickets[$id] = [
                 "id_ticket"        => (int)$id,
-                "codigo"           => QrModel::codigo((int)$id),
-                "firma"            => QrModel::firma((int)$id),
+                "codigo"           => qr_codigo((int)$id),
+                "firma"            => qr_firma((int)$id),
                 "fecha_boleto"     => $f['fecha_boleto'],
                 "situacion_boleto" => $f['situacion_boleto'],
                 "medio_de_pago"    => $f['medio_de_pago'],
@@ -90,7 +88,6 @@ try {
     ]);
 
 } catch (PDOException $e) {
-    error_log('mis_compras.php: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode(["error" => "Error interno en el servidor."]);
 }
