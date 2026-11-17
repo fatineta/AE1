@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinema Lights - Comprar</title>
-    <link rel="stylesheet" href="style.css?v=20261105-hamburger-1400">
+    <link rel="stylesheet" href="style.css?v=20261117-a11y-2">
 </head>
 
 <body>
@@ -27,14 +27,15 @@
     </nav>
 
     <main class="main-content">
-        <div class="card" data-role="form-section">
+        <!-- SECCIÓN 1: FORMULARIO DE COMPRA -->
+        <div class="card" data-role="form-section" tabindex="0">
             <h1>Completar formulario de compra</h1>
             <p class="subtitle">
                 Completá los datos requeridos para procesar tu orden.
             </p>
 
-            <div class="order-summary">
-                <h4>Tu selección</h4>
+            <div class="order-summary" tabindex="0" aria-label="Resumen de tu selección">
+                <h2>Tu selección</h2>
                 <p><strong>Película:</strong> <span data-role="peli-sel">Película seleccionada</span></p>
                 <p><strong>Función:</strong> <span data-role="hora-sel">18:30</span> · Sala <span
                         data-role="sala-sel">2</span></p>
@@ -85,22 +86,23 @@
             </form>
         </div>
 
-        <div class="card" data-role="success-section" style="display:none;">
+        <!-- SECCIÓN 2: ÉXITO / CONFIRMACIÓN (ACCESIBLE POR TECLADO) -->
+        <div class="card" data-role="success-section" style="display:none;" tabindex="0" aria-live="polite" role="status">
             <div class="success-box">
-                <div class="icon">✅</div>
+                <div class="icon" aria-hidden="true">✅</div>
                 <h2>¡Compra confirmada!</h2>
-                <p style="color:#64748b; margin-bottom:8px;">
+                <p style="color:#64748b; margin-bottom:8px;" tabindex="0">
                     Te enviamos el código y el QR a tu correo.
                 </p>
-                <p style="font-size:14px; color:#7a1d1e; font-weight:600;">
+                <p style="font-size:14px; color:#7a1d1e; font-weight:600;" tabindex="0">
                     Código de reserva: <span data-role="codigo-reserva">CL-XXXXXX</span>
                 </p>
 
-                <div class="qr-placeholder">
+                <div class="qr-placeholder" tabindex="0" aria-label="Código QR de la reserva">
                     [ QR CODE ]
                 </div>
 
-                <div class="guide-steps">
+                <div class="guide-steps" tabindex="0">
                     <h3>¿Cómo retiro mi entrada y comida?</h3>
                     <ol>
                         <li>Al llegar al cine, dirigite a las <strong>máquinas de autoatención</strong> (están a la
