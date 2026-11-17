@@ -1,6 +1,10 @@
 <?php
-require_once __DIR__ . '/../includes/sesion.php';
-header('Content-Type: application/json');
+require_once __DIR__ . '/../config/sesion.php';
+require_once __DIR__ . '/../config/conexion.php';
+require_once __DIR__ . '/../models/QrModel.php';
+require_once __DIR__ . '/../config/mailer.php';
+
+header('Content-Type: application/json; charset=utf-8');
 
 if (!isset($_SESSION['usuario_id'])) {
     http_response_code(401);
@@ -12,8 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(["error" => "Método no permitido."]);
     exit;
 }
-
-require_once '../includes/db.php';
 
 $data         = json_decode(file_get_contents('php://input'), true) ?? [];
 $idItinerario = (int)($data['id_itinerario'] ?? 0);
@@ -76,6 +78,7 @@ $aplicar = function (float $precio) use ($descuento): float {
 };
 
 try {
+    $pdo = Conexion::getInstance();
     $pdo->beginTransaction();
 
     // 1) Ticket del cliente logueado
@@ -148,11 +151,9 @@ try {
     $pdo->commit();
 
     // ---- Generar QR y enviar correo ----
-    require_once __DIR__ . '/../includes/mailer.php';
-
-    $datos   = qr_datos_ticket($pdo, $idTicket);
-    $textoQR = qr_texto($datos);
-    $pngB64  = base64_encode(qr_png($textoQR));
+    $datos   = QrModel::datosTicket($pdo, $idTicket);
+    $textoQR = QrModel::texto($datos);
+    $pngB64  = base64_encode(QrModel::png($textoQR));
 
     $emailCliente  = (string)($_SESSION['usuario_email'] ?? '');
     $nombreCliente = (string)($_SESSION['usuario_nombre'] ?? 'Cliente');
@@ -181,6 +182,7 @@ try {
     echo json_encode(["error" => $e->getMessage()]);
 } catch (PDOException $e) {
     if ($pdo->inTransaction()) $pdo->rollBack();
+    error_log('comprar.php: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode(["error" => "Error interno en el servidor."]);
 }
