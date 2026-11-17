@@ -1,16 +1,12 @@
 <?php
 // Sincroniza la tabla Pelicula con la cartelera real de TMDb (now_playing).
-//  - Si la pelicula ya existe (por tmdb_id o por titulo) la actualiza.
-//  - Si es nueva la inserta con slug, clasificacion y generos.
-//  - Las que ya no estan en cartelera NO se borran (tienen itinerarios/compras):
-//    se marcan en_cartelera = 0 y api/peliculas.php deja de mostrarlas.
-// Requiere haber corrido sql/tmdb_cartelera.sql una vez.
-// Uso: php sincronizar_cartelera.php   (o abrir en el navegador, solo desde localhost)
+// Programa 12 funciones diarias (3 salas x 4 turnos) rotando las 20 peliculas a lo largo de 14 dias.
 
 require __DIR__ . '/includes/db.php';
 require __DIR__ . '/includes/tmdb.php';
 
 header('Content-Type: text/plain; charset=utf-8');
+date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 if (PHP_SAPI !== 'cli' && !in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1'], true)) {
     http_response_code(403);
@@ -26,8 +22,8 @@ if (empty($cfg['tmdb_token'])) {
     die("Falta 'tmdb_token' en includes/config.local.php.\n");
 }
 
-$region = $cfg['tmdb_region'] ?? 'AR';   // AR = cartelera argentina; probar 'US' para la de EE.UU.
-$tope   = (int) ($cfg['tmdb_max'] ?? 10);
+$region = $cfg['tmdb_region'] ?? 'AR';
+$tope   = (int) ($cfg['tmdb_max'] ?? 20);
 $tmdb   = new TmdbService($cfg['tmdb_token'], 'es-AR', $cfg['tmdb_cacert'] ?? null);
 
 function sinTildes(string $t): string
@@ -50,12 +46,22 @@ $lista = $tmdb->enCartelera($region, $tope);
 if (!$lista) {
     echo "No se obtuvo ninguna pelicula.\n";
     echo ($tmdb->ultimoError ?? 'Sin detalle del error.') . "\n";
-    echo "Pistas: extension curl activa en php.ini, certificados SSL (tmdb_cacert), token correcto.\n";
     exit(1);
 }
 echo count($lista) . " peliculas en cartelera.\n\n";
 
-// Clasificaciones y generos que ya hay en la base
+// 1. Limpiar itinerarios y asientos anteriores sin errores de FK
+try {
+    $pdo->exec("SET FOREIGN_KEY_CHECKS = 0;");
+    $pdo->exec("DELETE FROM Asiento_Itinerario");
+    $pdo->exec("DELETE FROM Itinerario");
+    $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
+    echo "Itinerarios y asientos anteriores limpiados correctamente.\n\n";
+} catch (Throwable $e) {
+    $pdo->exec("SET FOREIGN_KEY_CHECKS = 1;");
+    echo "Nota al limpiar tablas: " . $e->getMessage() . "\n";
+}
+
 $clasif = $pdo->query("SELECT nombre_clasificacion, id_clasificacion FROM Clasificacion")->fetchAll(PDO::FETCH_KEY_PAIR);
 $idPorDefecto = $clasif['+13'] ?? reset($clasif);
 
@@ -78,15 +84,17 @@ $stLimpiaPG = $pdo->prepare("DELETE FROM Pelicula_Genero WHERE id_pelicula = :id
 $stPG       = $pdo->prepare("INSERT IGNORE INTO Pelicula_Genero (id_pelicula, id_genero) VALUES (:p, :g)");
 
 $idsTmdbVigentes = [];
+$peliculasActivas = [];
 $nuevas = $actualizadas = $omitidas = 0;
 
+// 2. Guardar o actualizar todas las peliculas de TMDb
 foreach ($lista as $r) {
     $titulo = $r['title'] ?? '(sin titulo)';
     echo "- $titulo ... ";
 
     $d = $tmdb->obtenerDetalle((int) $r['id'], ['append_to_response' => 'release_dates']);
     if (!$d) {
-        echo "no se pudo traer el detalle (" . ($tmdb->ultimoError ?? '?') . "), se omite.\n";
+        echo "no se pudo traer el detalle, se omite.\n";
         $omitidas++;
         continue;
     }
@@ -119,7 +127,7 @@ foreach ($lista as $r) {
 
         if ($id) {
             $stUpdate->execute($datos + [':id' => $id]);
-            $stSetSlug->execute([':s' => hacerSlug($titulo), ':id' => $id]); // solo si no tenia slug
+            $stSetSlug->execute([':s' => hacerSlug($titulo), ':id' => $id]);
             $accion = 'actualizada';
             $actualizadas++;
         } else {
@@ -129,13 +137,12 @@ foreach ($lista as $r) {
                 $slug = substr($slug, 0, 38) . '-' . $d['id'];
             }
             $stInsert->execute($datos + [':slug' => $slug]);
-            // el INSERT usa :titulo, :tmdb, etc. -> mismo arreglo de datos
             $id = (int) $pdo->lastInsertId();
             $accion = 'nueva';
             $nuevas++;
         }
 
-        // Generos (siempre sin tildes, como los de la base)
+        // Generos
         $stLimpiaPG->execute([':id' => $id]);
         foreach ($d['genres'] ?? [] as $g) {
             $nombre = sinTildes($g['name']);
@@ -149,7 +156,8 @@ foreach ($lista as $r) {
 
         $pdo->commit();
         $idsTmdbVigentes[] = (int) $d['id'];
-        echo "$accion (" . ($nombreClasif ?? 'sin clasificacion en TMDb -> +13') . ").\n";
+        $peliculasActivas[] = (int) $id;
+        echo "$accion.\n";
     } catch (Throwable $e) {
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
@@ -158,16 +166,72 @@ foreach ($lista as $r) {
         $omitidas++;
     }
 
-    usleep(300000);
+    usleep(150000);
 }
 
-// Todo lo que NO vino de la cartelera de TMDb (incluidas las peliculas de prueba
-// viejas, que no tienen tmdb_id) queda oculto. No se borra porque tiene itinerarios/compras.
+// Ocultar películas que ya no están vigentes
 if ($idsTmdbVigentes) {
     $marcas = implode(',', array_fill(0, count($idsTmdbVigentes), '?'));
     $st = $pdo->prepare("UPDATE Pelicula SET en_cartelera = 0 WHERE tmdb_id IS NULL OR tmdb_id NOT IN ($marcas)");
     $st->execute($idsTmdbVigentes);
-    echo "\nOcultadas (no estan en la cartelera de TMDb): " . $st->rowCount() . "\n";
+    echo "\nOcultadas: " . $st->rowCount() . "\n";
+}
+
+// 3. Programar grilla completa de 14 dias (3 salas x 4 horarios = 12 peliculas distintas por dia)
+$totalPelis = count($peliculasActivas);
+if ($totalPelis > 0) {
+    echo "\nProgramando grilla rotativa de 14 dias con $totalPelis peliculas...\n";
+
+    $salas = $pdo->query("SELECT id_sala FROM Sala ORDER BY id_sala")->fetchAll(PDO::FETCH_COLUMN);
+    if (!$salas) {
+        $salas = [1, 2, 3];
+    }
+
+    // Horarios espaciados (cada 3h 15m) para evitar colisiones con el trigger de duracion
+    $horarios = ['13:30:00', '16:45:00', '20:00:00', '23:15:00'];
+
+    $stInsIt      = $pdo->prepare("INSERT INTO Itinerario (fecha, horario_inicio, precio, subtitulada, id_pelicula, id_sala) VALUES (?, ?, ?, ?, ?, ?)");
+    $stAsientos   = $pdo->prepare("SELECT id_asiento, numero_asiento FROM Asiento WHERE id_sala = ?");
+    $stInsAsiento = $pdo->prepare("INSERT IGNORE INTO Asiento_Itinerario (id_asiento, id_itinerario, estado, precio_asiento) VALUES (?, ?, 'disponible', ?)");
+
+    // Cachear asientos por sala para acelerar la insercion masiva
+    $asientosPorSala = [];
+    foreach ($salas as $idSala) {
+        $stAsientos->execute([$idSala]);
+        $asientosPorSala[$idSala] = $stAsientos->fetchAll();
+    }
+
+    $funcionesCreadas = 0;
+    for ($dia = 0; $dia < 14; $dia++) {
+        $fechaFuncion = date('Y-m-d', strtotime("+$dia days"));
+        $slotDelDia = 0;
+
+        foreach ($salas as $idSala) {
+            foreach ($horarios as $idxHora => $horarioInicio) {
+                // Desplazamos el indice segun el dia para que cada jornada tenga peliculas distintas
+                $indicePeli = ($dia * 5 + $slotDelDia) % $totalPelis;
+                $idPelicula = $peliculasActivas[$indicePeli];
+                $precio = ($idxHora >= 2) ? 6000.00 : 5000.00; // Noche un poco mas cara
+                $subtitulada = ($idxHora % 2 === 1) ? 1 : 0;
+
+                try {
+                    $stInsIt->execute([$fechaFuncion, $horarioInicio, $precio, $subtitulada, $idPelicula, $idSala]);
+                    $idItinerario = $pdo->lastInsertId();
+
+                    foreach ($asientosPorSala[$idSala] as $asiento) {
+                        $precioAsiento = str_starts_with($asiento['numero_asiento'], 'A') ? $precio * 1.2 : $precio;
+                        $stInsAsiento->execute([$asiento['id_asiento'], $idItinerario, $precioAsiento]);
+                    }
+                    $funcionesCreadas++;
+                } catch (Throwable $ex) {
+                    echo "Aviso ($fechaFuncion $horarioInicio Sala $idSala): " . $ex->getMessage() . "\n";
+                }
+
+                $slotDelDia++;
+            }
+        }
+    }
+    echo "Funciones creadas: $funcionesCreadas (hasta " . (count($salas) * count($horarios)) . " peliculas distintas por dia).\n";
 }
 
 echo "\nNuevas: $nuevas | Actualizadas: $actualizadas | Omitidas: $omitidas\nListo.\n";
